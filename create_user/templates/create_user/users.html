@@ -1,0 +1,366 @@
+{% include "create_user/top_header.html" %}
+{% load static %}
+{% load render_table from django_tables2 %}
+
+
+
+
+<!-- <div class="main-container">
+
+<div class="container">
+  <h2>Basic Table</h2>
+  <p>The .table class adds basic styling (light padding and only horizontal dividers) to a table:</p>            
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Firstname</th>
+        <th>Email</th>
+        <th>Location</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for users in all_users_list %}
+      <tr>
+        <td>{{users.title}}</td>
+        <td>{{users.email}}</td>
+        <td><a href = "{% url 'map_view' users.id %}">Location</a></td>
+      </tr>
+      {% endfor %}
+      
+    </tbody>
+  </table>
+</div>
+
+
+</div>
+ -->
+
+ <div class="overlay"></div>
+
+        
+        <main class="page-content content-wrap">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="sidebar-pusher">
+                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic push-sidebar">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                     </div>
+                        <div class="logo-box">
+                        <a href="index.html" class="logo-text"><span>Bird Group</span></a>
+                       </div><!-- Logo Box -->
+                       <div class="search-button">
+                        <a href="javascript:void(0);" class="waves-effect waves-button waves-classic show-search"><i class="fa fa-search"></i></a>
+                        </div>
+                         <div class="topmenu-outer">
+                          <div class="top-menu">
+                            <ul class="nav navbar-nav navbar-left">
+                                <li>    
+                                    <a href="javascript:void(0);" class="waves-effect waves-button waves-classic sidebar-toggle"><i class="fa fa-bars"></i></a>
+                                </li>
+                                <li>    
+                                    <a href="javascript:void(0);" class="waves-effect waves-button waves-classic toggle-fullscreen"><i class="fa fa-expand"></i></a>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                        <i class="fa fa-cogs"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-md dropdown-list theme-settings" role="menu">
+                                        <li class="li-group">
+                                            <ul class="list-unstyled">
+                                                <li class="no-link" role="presentation">
+                                                    Fixed Header 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right fixed-header-check" checked>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="li-group">
+                                            <ul class="list-unstyled">
+                                                <li class="no-link" role="presentation">
+                                                    Fixed Sidebar 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right fixed-sidebar-check">
+                                                    </div>
+                                                </li>
+                                                <li class="no-link" role="presentation">
+                                                    Horizontal bar 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right horizontal-bar-check">
+                                                    </div>
+                                                </li>
+                                                <li class="no-link" role="presentation">
+                                                    Toggle Sidebar 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right toggle-sidebar-check">
+                                                    </div>
+                                                </li>
+                                                <li class="no-link" role="presentation">
+                                                    Compact Menu 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right compact-menu-check">
+                                                    </div>
+                                                </li>
+                                                <li class="no-link" role="presentation">
+                                                    Hover Menu 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right hover-menu-check">
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="li-group">
+                                            <ul class="list-unstyled">
+                                                <li class="no-link" role="presentation">
+                                                    Boxed Layout 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right boxed-layout-check">
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li>  
+                                    <a href="javascript:void(0);" class="waves-effect waves-button waves-classic show-search"><i class="fa fa-search"></i></a>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle waves-effect waves-button waves-classic" data-toggle="dropdown">
+                                        <span class="user-name">David<i class="fa fa-angle-down"></i></span>
+                                        <img class="img-circle avatar" src="{% static 'create_user/images/avatar1.png' %}" width="40" height="40" alt="">
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-list" role="menu">
+                                        <li role="presentation"><a href="profile.html"><i class="fa fa-user"></i>Profile</a></li>
+                                        <li role="presentation"><a href="calendar.html"><i class="fa fa-calendar"></i>Calendar</a></li>
+                                        <li role="presentation"><a href="inbox.html"><i class="fa fa-envelope"></i>Inbox<span class="badge badge-success pull-right">4</span></a></li>
+                                        <li role="presentation" class="divider"></li>
+                                        <li role="presentation"><a href="lock-screen.html"><i class="fa fa-lock"></i>Lock screen</a></li>
+                                        <li role="presentation"><a href="login.html"><i class="fa fa-sign-out m-r-xs"></i>Log out</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="login.html" class="log-out waves-effect waves-button waves-classic">
+                                        <span><i class="fa fa-sign-out m-r-xs"></i>Log out</span>
+                                    </a>
+                                </li>
+                                
+                            </ul><!-- Nav -->
+                        </div><!-- Top Menu -->
+                    </div>
+                </div>
+            </div><!-- Navbar -->
+            <div class="page-sidebar sidebar">
+                <div class="page-sidebar-inner slimscroll">
+                    <div class="sidebar-header">
+                        <div class="sidebar-profile">
+                            <a href="javascript:void(0);">
+                                <div class="sidebar-profile-image">
+                                    <img src="{% static 'create_user/images/profile-menu-image.png'%}" class="img-circle img-responsive" alt="">
+                                </div>
+                                <div class="sidebar-profile-details">
+                                    <span>David Green<br><small>Art Director</small></span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <ul class="menu accordion-menu">
+                        <li class="active"><a href="index.html" class="waves-effect waves-button"><span class="menu-icon glyphicon glyphicon-user"></span><p>User</p></a>  </li>
+                        <li><a href="profile.html" class="waves-effect waves-button"><span class="menu-icon glyphicon glyphicon-dashboard"></span><p>Lead</p></a></li>
+                   </ul>
+                </div><!-- Page Sidebar Inner -->
+            </div><!-- Page Sidebar -->
+            <div class="page-inner">
+                <div class="page-title">
+                    <h3>Dashboard</h3>
+                    <div class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li><a href="index.html">Home</a></li>
+                            <li class="active">Dashboard</li>
+                        </ol>
+                    </div>
+                </div>
+                <div id="main-wrapper">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="panel info-box panel-white">
+                                <div class="panel-body">
+                                    <div class="info-box-stats">
+                                        <p class="counter">107,200</p>
+                                        <span class="info-box-title">User activity this month</span>
+                                    </div>
+                                    <div class="info-box-icon">
+                                        <i class="icon-users"></i>
+                                    </div>
+                                    <div class="info-box-progress">
+                                        <div class="progress progress-xs progress-squared bs-n">
+                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="panel info-box panel-white">
+                                <div class="panel-body">
+                                    <div class="info-box-stats">
+                                        <p class="counter">340,230</p>
+                                        <span class="info-box-title">Page views</span>
+                                    </div>
+                                    <div class="info-box-icon">
+                                        <i class="icon-eye"></i>
+                                    </div>
+                                    <div class="info-box-progress">
+                                        <div class="progress progress-xs progress-squared bs-n">
+                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="panel info-box panel-white">
+                                <div class="panel-body">
+                                    <div class="info-box-stats">
+                                        <p>$<span class="counter">653,000</span></p>
+                                        <span class="info-box-title">Monthly revenue goal</span>
+                                    </div>
+                                    <div class="info-box-icon">
+                                        <i class="icon-basket"></i>
+                                    </div>
+                                    <div class="info-box-progress">
+                                        <div class="progress progress-xs progress-squared bs-n">
+                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="panel info-box panel-white">
+                                <div class="panel-body">
+                                    <div class="info-box-stats">
+                                        <p class="counter">47,500</p>
+                                        <span class="info-box-title">New emails recieved</span>
+                                    </div>
+                                    <div class="info-box-icon">
+                                        <i class="icon-envelope"></i>
+                                    </div>
+                                    <div class="info-box-progress">
+                                        <div class="progress progress-xs progress-squared bs-n">
+                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- Row -->
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="panel panel-white">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="visitors-chart">
+                                    <div class="bootstrap-iso">
+                                      <div class="container-fluid">
+                <div class="row">
+       <div class="col-md-6 col-sm-6 col-xs-12">
+     <form action="#" class="form-horizontal" method="post">
+     <div class="form-group ">
+      <label class="control-label col-sm-2 requiredField" for="date">
+       Date
+       <span class="asteriskField">
+        *
+       </span>
+      </label>
+      <div class="col-sm-10">
+       <div class="input-group">
+        <div class="input-group-addon">
+         <i class="fa fa-calendar">
+         </i>
+        </div>
+        <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+       </div>
+      </div>
+     </div>
+     <div class="form-group">
+      
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</div>
+    <div class="panel-heading">
+                                   
+    <table id="example" class="table table-striped">
+     <thead>
+     
+      <tr>
+        <th>Name</th>
+         <th>Email</th>
+          <th>Role</th>
+        <th class="locatiohead"><i class="fa fa-map-marker" ></i>Location</th>
+     
+       </tr>
+
+     </thead>
+     <tbody>
+      {% for users in all_users_list %}
+      <tr>
+        <td>{{users.title}}</td>
+        <td>{{users.email}}</td>
+       
+        <td><a href = "{% url 'map_view' users.id %}">Location</a></td>        <td><button type="button" class="locatiobtn"><a href = "/map_view/?user_id={{users.id}}&web=1">View</a></button></td>
+      
+      </tr>
+      {% endfor %}
+      
+    </tbody>
+  </table>
+                                            </div>
+                                           
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+
+       
+        
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+
+ <script type="text/javascript">
+   $(document).ready( function () {
+    $('#example').DataTable();
+} );
+
+ </script>
+<script>
+    $(document).ready(function(){
+        var date_input=$('input[name="date"]'); //our date input has the name "date"
+        var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+        date_input.datepicker({
+            format: 'mm/dd/yyyy',
+            container: container,
+            todayHighlight: true,
+            autoclose: true,
+        })
+    })
+</script>
+
+    </body>
+
+</html>

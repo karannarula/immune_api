@@ -1,0 +1,170 @@
+.locatiohead{
+    float: right;
+}
+
+.locatiobtn {
+
+    float: right;
+    background-color: #2b384e;
+    border: navajowhite;
+    padding: 5px 5px 5px 5px;
+    color: #fff;
+
+
+}
+.locatiohead i{
+	font-size: 14px;
+
+margin: 1px 8px 0 26px;
+}
+.bootstrap-iso .formden_header h2, .bootstrap-iso .formden_header p, .bootstrap-iso form
+{font-family: Arial, Helvetica, sans-serif; color: black}
+.bootstrap-iso form button, .bootstrap-iso form button:hover{color: white !important;}
+ .asteriskField{color: red;}
+#example_filter{
+	float: right;
+}
+.bootstrap-iso {
+    position: relative;
+    top: 0px;
+    left: 0px;
+}
+	.note
+{
+    text-align: center;
+    height: 80px;
+    background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+    color: #fff;
+    font-weight: bold;
+    line-height: 80px;
+}
+.form-content
+{
+    padding: 5%;
+    border: 1px solid #ced4da;
+    margin-bottom: 2%;
+}
+.form-control{
+    border-radius:1.5rem;
+}
+.btnSubmit
+{
+    border:none;
+    border-radius:1.5rem;
+    padding: 1%;
+    width: 20%;
+    cursor: pointer;
+    background: #0062cc;
+    color: #fff;
+}
+.selection{
+	 border-radius:1.5rem;
+	    border: 1px solid #ced4da;
+	    width: 100%;
+	 height: 34px;
+}
+.headpa{
+	color: #110a0a8a;
+	font-weight: bold;
+}
+.texttile{
+	border-radius:0.5rem;
+	    border: 1px solid #ced4da;
+}
+/*===================media css======================*/
+
+ @media (max-width: 1100px) {
+ 
+}
+@media (max-width:768px){
+    .bootstrap-iso {
+    position: relative;
+    top: 6px;
+    left: 0px;
+}
+#example_filter {
+    float: right;
+    position: relative;
+    
+   right: 6px;
+    bottom: 91px;
+}
+.locatiohead i {
+    font-size: 14px;
+    margin: 1px 8px 0 13px;
+}
+    }
+    @media (max-width: 992px){
+
+    }
+th { background: #c5c5c5;}
+table {
+        border-collapse: collapse;
+        border: 1px solid #cdcdcd;
+        font: normal 12px arial; 
+        width: 100%;
+}
+td, th { border: 1px solid #cdcdcd; padding: 2px;}
+
+/* Section two*/
+
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+        /* Section three*/
+                table, thead, tbody, th, td, tr { 
+                        display: block; 
+                }
+                /* Section four*/
+                thead tr { 
+                        position: absolute;
+                        top: -9999px;
+                        left: -9999px;
+                }
+                
+                tr { border-bottom: 1px solid #ccc; }
+/* Section five*/
+                td { 
+                     border: none;
+                     border-bottom: 1px solid #eee; 
+                     position: relative;
+                     padding-left: 50%; 
+                }
+                td:before { 
+                        position: absolute;
+                        top: 3px;
+                        left: 6px;
+                        width: 45%; 
+                        padding-right: 10px; 
+                        white-space: nowrap;
+                        font-weight: bold;
+                }
+                /* Section six*/
+
+                td:nth-of-type(1):before { content: "First Name"; }
+                td:nth-of-type(2):before { content: "Last Name"; }
+                td:nth-of-type(3):before { content: "Job Title"; }
+                td:nth-of-type(4):before { content: "Joining Date"; }
+                td:nth-of-type(5):before { content: "Total Experience"; }
+                td:nth-of-type(6):before { content: "Relevant Experience"; }
+                td:nth-of-type(7):before { content: "Date of Birth"; }
+                td:nth-of-type(8):before { content: "Current City"; }
+                td:nth-of-type(9):before { content: "Prefered City"; }
+                td:nth-of-type(10):before { content: "Nationality"; }
+}
+
+/* Section seven*/
+        @media only screen
+        and (min-device-width : 320px)
+        and (max-device-width : 480px) {
+                body { 
+                        padding: 0; 
+                        margin: 0; 
+                        width: 320px; }
+                }
+/* Section eight*/
+        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+                body { 
+                        width: 495px; 
+                }
+        }
+/*===================================================*/

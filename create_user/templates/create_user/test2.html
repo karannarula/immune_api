@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Google map filtering (select and input) marker & marker clusterer</title>
+  
+  
+  
+      <style type="text/css">
+        
+        .wrapper {
+  align-item: center;
+  display: flex;
+}
+.wrapper .filter-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-right: 50px;
+}
+
+h3 small {
+  display: block;
+  font-size: 12px;
+}
+
+button {
+  margin-top: 40px;
+}
+
+#map {
+  height: 100vh;
+  width: 700px;
+}
+
+.alert {
+  color: red;
+  display: none;
+  font-size: 16px;
+  font-weight: bold;
+}
+.alert.is-visible {
+  display: block;
+}
+
+.tt-menu {
+  border: 1px solid transparent;
+  border-color: transparent lightgrey lightgrey lightgrey;
+  background: white;
+  width: 100%;
+}
+.tt-menu .tt-dataset .tt-suggestion {
+  color: darkgrey;
+  cursor: pointer;
+  padding: 1rem;
+  user-select: none;
+}
+.tt-menu .tt-dataset .tt-suggestion.tt-cursor, .tt-menu .tt-dataset .tt-suggestion:hover {
+  background: lightgrey;
+  color: white;
+}
+.tt-menu .tt-dataset .tt-suggestion + .tt-suggestion {
+  border-top: 1px solid lightgrey;
+}
+      </style>
+  
+</head>
+
+<body>
+
+   
+   <form action="http://birdadmin.kxterp.com:3000/map_view/" class="form-horizontal" method="post">
+    {% csrf_token %}
+<div class="wrapper">
+  
+  <div class="filter-wrapper">
+<h3>Filter those markers: </h3>
+    <div class="filter-select">
+<label>From Date</label>
+<div class="input-group">
+       
+        <input class="form-control" id="from_date" name="date" placeholder="MM/DD/YYYY" value="{{date_range}}" type="text"/>
+
+    </div>
+      <label>To Date</label>
+<div class="input-group">
+       
+        <input class="form-control" id="to_date" name="date" placeholder="MM/DD/YYYY" value="{{date_range}}" type="text"/>
+
+    </div>
+
+
+<label>Users</label>
+{% if show_user == 1 %}
+        
+        <select name="user_name">
+        <option>Users</option>
+        {% for users in get_users %}
+
+        <option value="{{users.email}}">{{users.title}}</option>
+
+        {%endfor%}
+
+         {%else%}
+        <select name="user_name" style="display: none;" >
+            <option value="volvos" name="user_name">{{title}}</option>
+        </select>
+  {% endif %}
+</select>
+        <input type="hidden" name="user_id" value="{{user_id}}">
+
+        <label>Distance Travelled</label>
+        <input type="text" name="Distance" value="{{distance}}">
+
+    </div>
+
+
+    
+<div class="alert">There is no result for your current search</div>
+ 
+    <button id="submit"> Submit</button>
+  </div>
+
+<div id="map"></div>
+  </div>
+</form>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js'></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<script>
+    $(document).ready(function(){
+        var date_input=$('input[name="date"]'); //our date input has the name "date"
+        var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+        date_input.datepicker({
+            format: 'mm/dd/yyyy',
+            container: container,
+            todayHighlight: true,
+            autoclose: true,
+        })
+    })
+</script>
+ <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaZQYoMxXKSVtSdU1WkaG_b_5Pw77oUaM&callback=initMap">
+    </script>
+  
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js'></script>
+      <script>
+    console.log({{ lat1|safe }})
+var locations = [];
+var infoWindow  ;
+var pos1;
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 17,
+          center: {lat: {{ lat1|safe }}, lng: {{ lon1|safe }}},
+          mapTypeId: 'roadmap'
+        });
+        infoWindow = new google.maps.InfoWindow;
+         if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            infoWindow.open(map);
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(false, infoWindow, map.getCenter());
+          });
+          
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+        var map_points = {{latlongs|safe}}
+        
+        var flightPlanCoordinates = map_points;
+        var flightPath = new google.maps.Polyline({
+          path: flightPlanCoordinates,
+          geodesic: true,
+          strokeColor: 'red',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath.setMap(map);
+      }
+</script>
+
+</body>
+</html>
