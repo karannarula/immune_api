@@ -3024,7 +3024,7 @@ class DoctypeCRUD(APIView):
             start_page_length = request.GET.get('start_page_length')
             page_limit_length = request.GET.get('limit_page_length')
             testimonial_res1 = []
-            API_URL1 = 'http://14.98.78.69:2233/api/resource/'+doctype+'?fields=["name"]&limit_page_length='+page_limit_length+''
+            API_URL1 = 'http://14.98.78.69:2233/api/resource/'+doctype+'?fields=["*"]&limit_page_length='+page_limit_length+''
             res1 = requests.get(url=API_URL1, verify=False)
             testimonial_res11 = json.loads(res1.text)
             for response in testimonial_res11['data']:
@@ -3045,15 +3045,21 @@ class DoctypeCRUD(APIView):
                 
                 
                 
-                API_URL = 'http://14.98.78.69:2233/api/resource/'+doctype+'/'+response['name']+'?sid='+sid+''
+                API_URL = 'http://14.98.78.69:2233/api/resource/Media Table?fields=["media_data"]&filters=[["Media Table","post_id","=","'+response['name']+'"]]'
 
                 res22 = requests.get(url=API_URL, verify=False)
-                testimonial_res11 = json.loads(res22.text)
-                user_image = get_profile_pic(testimonial_res11['data']['owner'])
+                testimonial_res13 = json.loads(res22.text)
+                user_image = get_profile_pic(response['owner'])
+                image = testimonial_res13['data']
+
+                API_URL_SHARED = 'http://14.98.78.69:2233/api/resource/Shared Users?fields=["*"]&filters=[["Shared Users","post_id","=","'+response['name']+'"]]'
+
+                resshared = requests.get(url=API_URL_SHARED, verify=False)
+                testimonial_res13shared = json.loads(resshared.text)
+                shared_user = testimonial_res13shared['data']
                 #shared_user = testimonial_res11['data']['shared_users']
-                
-                testimonial_res12 = testimonial_res11['data']
-                testimonial_res12.update({"user_image":user_image,"likes":len1,"comment_count":len2})
+                testimonial_res12 = response
+                testimonial_res12.update({"user_image":user_image,"likes":len1,"comment_count":len2,"post_media":image,"shared_users":shared_user})
                 
                 testimonial_res1.append(testimonial_res12)
             dict_ = {"data":testimonial_res1[int(start_page_length):int(page_limit_length)],"length":post_length}
@@ -3063,39 +3069,62 @@ class DoctypeCRUD(APIView):
                 
         
         
-        
-    
     def post(self, request, format=None):
         data = request.data
         data = json.dumps(data)
-        print(data)
         module = request.data['module']
+        data2 = {}
         owner = request.data['owner']
         person_name = get_customer_name(owner)
         data = json.loads(data)
         data.update({"person_name":person_name})
         try:
             b = data.pop('post_media')
-            c = json.loads(b)
-            data.update({'post_media':c})
-
-            
-
         except:
             pass
         try:
             pop_shared = data.pop('shared_users')
-            pop_shar = json.loads(pop_shared)
-            data.update({'shared_users':pop_shar})
+            
         except:
             pass
-        data = json.dumps(data)
         
-
+        data = json.dumps(data)
         API_URL = 'http://14.98.78.69:2233/api/resource/'+module+''
         res2 = requests.post(url=API_URL, verify=False, data =data)
         response_data = json.loads(res2.text)
+        
+        
+        name = response_data['data']['name']
+        
     
+        try:
+            if b:
+                b = json.loads(b)
+                for z in b:
+                    
+                    z.update({'post_id':name,'customer_name':person_name})
+                    z = json.dumps(z)
+                    API_URL2 = 'http://14.98.78.69:2233/api/resource/Media Table'
+                    res22 = requests.post(url=API_URL2, verify=False, data = z)
+                    #response_data2 = json.loads(res22.text)
+
+            
+                    #response_shared = json.loads(resshared.text)
+        except:
+            pass
+        
+        try:
+            pop_shared = json.loads(pop_shared)
+            if pop_shared:
+                for y in pop_shared:
+                    customer_name = get_customer_name(y['email'])
+                    y.update({'post_id':name,'customer_name':customer_name})
+                    y = json.dumps(y)
+                    API_URL_SHARED = 'http://14.98.78.69:2233/api/resource/Shared Users'
+                    resshared = requests.post(url=API_URL_SHARED, verify=False, data = y)
+        except:
+            pass
+            
 
         return Response({"data":response_data['data']})
 
@@ -3406,27 +3435,36 @@ class Get_User_Uploaded_Images(APIView):
         start_page_length = request.GET.get('start_page_length')
         page_limit_length = request.GET.get('limit_page_length')
         customer_name = get_customer_name( request.GET.get('email'))
-        API_URL = 'http://14.98.78.69:2233/api/resource/Posts Manager?fields=["name"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
-        res = requests.get(url=API_URL, verify=False)
+        API_URL_IMAGE = 'http://14.98.78.69:2233/api/resource/Media Table?fields=["media_data"]&filters=[["Media Table","customer_name","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
+        res = requests.get(url=API_URL_IMAGE, verify=False)
         json_data = json.loads(res.text)
         for r in json_data['data']:
-            API_URL1 = 'http://14.98.78.69:2233/api/resource/Posts Manager/'+r['name']+'?sid='+sid+''
-            res1 = requests.get(url=API_URL1, verify=False)
-            json_data1 = json.loads(res1.text)
-            if len(json_data1['data']['post_media'])>0:
-                images_list.append(json_data1['data']['post_media'])
+            images_list.append(r['media_data'])
+        API_URL_IMAGE_LENGTH = 'http://14.98.78.69:2233/api/resource/Media Table?fields=["media_data"]&filters=[["Media Table","customer_name","=","'+customer_name+'"]]&limit_page_length=all'
+        res_length = requests.get(url=API_URL_IMAGE_LENGTH, verify=False)
+        json_data_length = json.loads(res_length.text)
+        images_list1 = len(json_data_length['data'])
+        # API_URL = 'http://14.98.78.69:2233/api/resource/Posts Manager?fields=["name"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
+        # res = requests.get(url=API_URL, verify=False)
+        # json_data = json.loads(res.text)
+        # for r in json_data['data']:
+        #     API_URL1 = 'http://14.98.78.69:2233/api/resource/Posts Manager/'+r['name']+'?sid='+sid+''
+        #     res1 = requests.get(url=API_URL1, verify=False)
+        #     json_data1 = json.loads(res1.text)
+        #     if len(json_data1['data']['post_media'])>0:
+        #         images_list.append(json_data1['data']['post_media'])
         
         
-        API_URL11 = 'http://14.98.78.69:2233/api/resource/Posts Manager?fields=["name"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length=all'
-        res11 = requests.get(url=API_URL11, verify=False)
-        json_data11 = json.loads(res11.text)
-        for r11 in json_data11['data']:
+        # API_URL11 = 'http://14.98.78.69:2233/api/resource/Posts Manager?fields=["name"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length=all'
+        # res11 = requests.get(url=API_URL11, verify=False)
+        # json_data11 = json.loads(res11.text)
+        # for r11 in json_data11['data']:
             
-            API_URL111 = 'http://14.98.78.69:2233/api/resource/Posts Manager/'+r11['name']+'?sid='+sid+''
-            res111 = requests.get(url=API_URL111, verify=False)
-            json_data111 = json.loads(res111.text)
-            if len(json_data111['data']['post_media'])>0:
-                images_list1+=1
+        #     API_URL111 = 'http://14.98.78.69:2233/api/resource/Posts Manager/'+r11['name']+'?sid='+sid+''
+        #     res111 = requests.get(url=API_URL111, verify=False)
+        #     json_data111 = json.loads(res111.text)
+        #     if len(json_data111['data']['post_media'])>0:
+        #         images_list1+=1
         
         #total_length = len(images_list1)
         print(images_list)
@@ -3590,16 +3628,29 @@ class User_POST(APIView):
         start_page_length = request.GET.get('start_page_length')
         page_limit_length = request.GET.get('limit_page_length')
         customer_name = get_customer_name(email)
-        API_URL = 'http://14.98.78.69:2233/api/resource/Posts Manager?fields=["name"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length=all'
+        API_URL_LENGTH = 'http://14.98.78.69:2233/api/resource/Posts Manager?fields=["name"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length=all'
+        res_LENGTH = requests.get(url=API_URL_LENGTH, verify=False)
+        json_data_LENGTH = json.loads(res_LENGTH.text)
+        total_length = len(json_data_LENGTH['data'])
+        API_URL = 'http://14.98.78.69:2233/api/resource/Posts Manager?fields=["*"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
         res = requests.get(url=API_URL, verify=False)
         json_data = json.loads(res.text)
-        total_length = len(json_data['data'])
+        
         for r in json_data['data']:
-            API_URL = 'http://14.98.78.69:2233/api/resource/Posts Manager/'+r['name']+'?sid='+sid+''
-            res22 = requests.get(url=API_URL, verify=False)
-            testimonial_res1 = json.loads(res22.text)
-            res = testimonial_res1['data']
-            post_list.append(res)
+            API_URL_MEDIA = 'http://14.98.78.69:2233/api/resource/Media Table?fields=["media_data"]&filters=[["Media Table","post_id","=","'+r['name']+'"]]'
+
+            res22 = requests.get(url=API_URL_MEDIA, verify=False)
+            testimonial_res13 = json.loads(res22.text)
+            user_image = get_profile_pic(r['owner'])
+            image = testimonial_res13['data']
+
+            API_URL_SHARED = 'http://14.98.78.69:2233/api/resource/Shared Users?fields=["*"]&filters=[["Shared Users","post_id","=","'+r['name']+'"]]'
+
+            resshared = requests.get(url=API_URL_SHARED, verify=False)
+            testimonial_res13shared = json.loads(resshared.text)
+            shared_user = testimonial_res13shared['data']
+            r.update({'post_media':image,'shared_users':shared_user})
+            post_list.append(r)
         resp_ = {"data":post_list[int(start_page_length):int(page_limit_length)],"count":total_length}
         return Response(resp_)
 
