@@ -2145,6 +2145,8 @@ def item_retrieval_api2(request):
     item_group_api = 'http://14.98.78.69:2233/api/resource/Item%20Group?limit_page_length=100&fields=["*"]&filters=[["Item Group","parent_item_group","=","All Item Groups"]]'
     res = requests.get(url = item_group_api,verify=False)
     response_data = json.loads(res.text)
+    
+
 
     item_group_api2 = 'http://14.98.78.69:2233/api/resource/Item%20Group?limit_page_length=&fields=["*"]'
     res2 = requests.get(url = item_group_api2,verify=False)
@@ -2153,7 +2155,9 @@ def item_retrieval_api2(request):
     
     for data in response_data['data']:
         #if data['parent_item_group'] == "All Item Groups":
-        parent_list.append(data['name'])
+        parent_list.append({"name":data['name'],"image":data['image'],'is_popular':data['is_popular']})
+        # parent_list.append(data['name'])
+      
     sub_child_list = []
 
     sub_resp = {}
@@ -2167,9 +2171,9 @@ def item_retrieval_api2(request):
         for parent in response_data2['data']:
 
             
-            if parent['parent_item_group'] == dataq:
+            if parent['parent_item_group'] == dataq["name"]:
                 
-                underscore_str = dataq.replace(" ", "_")
+                underscore_str = dataq["name"].replace(" ", "_")
                 underscore_str = underscore_str.lower()
                 child_list = []
                 for child in response_data2['data']:
@@ -2179,9 +2183,12 @@ def item_retrieval_api2(request):
                 resp[parent['name']] = {'opt':child_list,'name':parent['name']}
                 resp.update(resp)
                 child_resp1['options'] = resp
+                child_resp1['image'] = dataq['image']
+                child_resp1['is_popular'] = dataq['is_popular']
         
-        sub_resp[dataq] = child_resp1
-        sub_resp[dataq]['name'] = dataq
+        sub_resp[dataq["name"]] = child_resp1
+        sub_resp[dataq["name"]]['name'] = dataq["name"]
+
                 # resp[dataq] = {'key':underscore_str,'name':dataq,'p':parent['name']}
                 # resp[dataq]['options'] = {parent['name']:{}}
                 # sub_child_list.append(resp)
@@ -2208,6 +2215,89 @@ def item_retrieval_api2(request):
     od = collections.OrderedDict(sorted(sub_resp.items()))
 
     return Response({"item_group":od})
+
+class SupplierInsert(APIView):
+    def get(self,request,format=None):
+        coupon_code = request.GET.get('coupon_code')
+        customer_url =  'http://14.98.78.69:2233/api/resource/Supplier?fields=["*"]&limit_page_length=all'
+        res2 = requests.get(url=customer_url)
+
+        return Response(json.loads(res2.text))
+
+    def post(self, request, format=None):
+        data = request.data
+        print(data)
+        supplier = request.data['supplier_name']
+        API_URL2 =  'http://14.98.78.69:2233/api/resource/Supplier?fields=["name"]&filters=[["Supplier","supplier_name","=","'+supplier+'"]]'
+        res22 = requests.get(url=API_URL2)
+        response = json.loads(res22.text)
+        if len(response['data'])>0:
+            return Response({"status":0,"message":"Supplier already Exist"})
+        data = json.dumps(data)
+        sid = get_sid()
+        print(sid)
+        API_URL =  'http://14.98.78.69:2233/api/resource/Supplier?sid='+sid+''
+        res2 = requests.post(url=API_URL, verify=False, data =data)
+        print(res2)
+        response_data = json.loads(res2.text)
+        print(response_data)
+        return Response({"data":response_data['data']})
+
+class ContactUs(APIView):
+    def post(self,request,format=None):
+        data = request.data
+        print(data)
+        data = json.dumps(data)
+        API_URL = 'http://14.98.78.69:2233/api/resource/Lead'
+        res2 = requests.post(url=API_URL, verify=False, data =data)
+        print(res2.text)
+        return Response({"lead":res2.text})
+
+
+class CouponCode(APIView):
+    def get(self,request,format=None):
+        print("fsfdfdf")
+        # coupon_code = request.GET.get('coupon_code')
+        p = []
+        sid = get_sid()
+        if 'email' in request.GET:
+            email = request.GET.get('email')
+            customer_name = get_customer_name(email)
+            customer_url2 = 'http://14.98.78.69:2233/api/resource/Coupon Used By Users?fields=["*"]&filters=[["Coupon Used By Users", "customer", "=", "'+customer_name+'"]]&limit_page_length=all'
+            
+            res2 = requests.get(url=customer_url2)
+            json_data = json.loads(res2.text)
+            
+            coupon_url = 'http://14.98.78.69:2233/api/resource/Coupon Code?fields=["*"]&limit_page_length=all'
+            res_coupon = requests.get(url=coupon_url)
+            
+            res_json_coupon = json.loads(res_coupon.text)
+            
+
+            for r in res_json_coupon['data']:
+                if not any(d['coupon_code'] == r['name'] for d in json_data['data']):
+                    print(r)
+                    customer_url3 =  'http://14.98.78.69:2233/api/resource/Coupon Code/'+r['name']+'?sid='+sid+''
+                    print(customer_url3)
+                    res22 = requests.get(url=customer_url3)
+                    json_res22 = json.loads(res22.text)
+                    p.append(json_res22['data'])
+            return Response({"data":p})
+        else:
+            customer_url =  'http://14.98.78.69:2233/api/resource/Coupon Code?fields=["*"]&limit_page_length=all'
+            print(customer_url)
+            res2 = requests.get(url=customer_url)
+
+            return Response(json.loads(res2.text))
+        
+
+    def post(self, request, format=None):
+        data = request.data
+        data = json.dumps(data)
+        API_URL = 'http://14.98.78.69:3454/api/resource/Coupon Code'
+        res2 = requests.post(url=API_URL, verify=False, data =data)
+        response_data = json.loads(res2.text)
+        return Response({"data":response_data['data']})
 
 
 class my_dictionary(dict): 
@@ -2240,6 +2330,57 @@ def item_detail(request):
     response_data = json.loads(res.text)
     
     return Response({"item_list":response_data})
+
+@api_view(['GET', 'POST','OPTIONS'])
+def item_filter(request):
+    
+    fields=""
+    GET = request.GET.copy()
+    list_item=[]
+    start_page_length = GET.pop('start_page_length')
+    page_limit_length = GET.pop('limit_page_length')
+    start_page_length = start_page_length[0]
+    page_limit_length = page_limit_length[0]
+    if 'new_arrival' in GET:
+        today = date.today()
+        from datetime import timedelta
+        today = today+timedelta(days=1)
+        print(today)
+        creation = GET.pop('new_arrival')
+        fields+='["Item","creation","<=","'+str(today)+'"],'
+
+    if 'price_lth' in GET:
+        today = date.today()
+        creation = GET.pop('price_lth')
+        fields+='["Item","standard_rate",">=","0"],'
+
+    if 'price_gth' in GET:
+        today = date.today()
+        creation = GET.pop('price_gth')
+        fields+='["Item","standard_rate","<=",100000],'
+    
+    for params in GET:
+        param_name = GET[''+params+'']
+        param_list = param_name.split(",")
+        if param_list:
+            fields+='["Item","'+params+'","In","'+GET[''+params+'']+'"],'
+        else:
+            fields+='["Item","'+params+'","=","'+GET[''+params+'']+'"],'
+    
+    item_detail_api =  'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=['+fields+']&limit_page_length=all'
+    
+    item_detail_api=item_detail_api.replace(",]","]")
+    res = requests.get(url = item_detail_api,verify=False)
+    response_data = json.loads(res.text)
+    for z in response_data['data']:
+        list_item.append(z)
+    random.shuffle(list_item)
+    
+    items = {"items":list_item[int(start_page_length):int(page_limit_length)]}
+    items.update({'total_length':len(response_data['data'])})
+    return Response(items)
+    
+
 
 @api_view(['GET', 'POST','OPTIONS'])
 def single_item_detail(request):
@@ -2353,40 +2494,33 @@ def get_item_details(request):
 @api_view(['GET', 'POST','OPTIONS'])
 def products(request):
     item_group = request.GET['item_group']
+
     
     list_of_brand = item_group.split(',')
     brands_list = []
-    sub_item_group = request.GET['sub_item_group']
-    main_item_group = request.GET['main_item_group']
-    start_page_index1 = "0"
-    try:
-        
-        start_page_index = request.GET['start_page_index']
-        
-        
-        last_page_index= 0
-        start_page_index1 = str((int(start_page_index)-1)*9 + 1)
-        last_page_index = str(9)
-    except Exception as e:
-        print(e)
-        start_page_index = "0"
-        last_page_index = "9"
+    sub_item_group = request.GET['sub_category']
+    main_item_group = request.GET['main_category']
+    start_page_length = request.GET.get('start_page_length')
+    page_limit_length = request.GET.get('limit_page_length')
 
     # print(start_page_index1)
     # print(last_page_index)
     # sys.exit()
     t_length = 0
     for l in list_of_brand:
-        item_detail_api1 = 'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","item_group","=","'+l+'"],["Item","main_category","=","'+main_item_group+'"],["Item","sub_category","=","'+sub_item_group+'"],["Item","has_variants","=","0"]]&limit_page_length=all'
+        item_detail_api1 =  'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","item_group","=","'+l+'"],["Item","main_category","=","'+main_item_group+'"],["Item","sub_category","=","'+sub_item_group+'"],["Item","has_variants","=","0"]]&limit_page_length=all'
         
 
         res1 = requests.get(item_detail_api1,verify=False)
         response_data1 = json.loads(res1.text)
+        print(response_data1)
         t_length+=len(response_data1['data'])
     
 
     for l in list_of_brand:
-        item_detail_api = 'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","item_group","=","'+l+'"],["Item","main_category","=","'+main_item_group+'"],["Item","sub_category","=","'+sub_item_group+'"],["Item","has_variants","=","0"]]&limit_start='+start_page_index1+'&limit_page_length='+last_page_index+''
+        if sub_item_group =="" or main_item_group=="":
+
+            item_detail_api =  'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","item_group","=","'+l+'"],["Item","main_category","=","'+main_item_group+'"],["Item","sub_category","=","'+sub_item_group+'"],["Item","has_variants","=","0"]]&limit_page_length='+page_limit_length+''
 
         
         res = requests.get(item_detail_api,verify=False)
@@ -2395,9 +2529,11 @@ def products(request):
             
             brands_list.append(response_data['data'])
            
-
-    items = {"items":brands_list[0]}
+    
+    items = {"items":brands_list[0][int(start_page_length):int(page_limit_length)]}
     items.update({'total_length':t_length})
+    print(items)
+    
     return Response(items)
     
 
@@ -2679,6 +2815,37 @@ class Profile(APIView):
         
 #         res2 = requests.get(url=API_URL)
 #         return Response({"user":json.loads(res2.text)})
+
+class ItemSearchAPI(APIView):
+    def get(self,request,format=None):
+        search = request.GET.get('search')
+        item_name_url =  'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","item_name","LIKE","%'+search+'%"]]'
+        item_group_url =  'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","item_group","LIKE","%'+search+'%"]]'
+        item_desc_url =  'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","description","LIKE","%'+search+'%"]]'
+        l = ["item_name_url","item_group_url"]
+        result_array = []
+        for z in range(0,3):
+            if z==0:
+                res2 = requests.get(url=item_name_url)
+            elif z==1:
+                res2 = requests.get(url=item_group_url)
+            else:
+                res2 = requests.get(url=item_desc_url)
+            res2_json = json.loads(res2.text)
+            for ress in res2_json['data']:
+                result_array.append(ress)
+
+            
+        
+        return Response(result_array)
+
+
+class ForgotPassword(APIView):
+    def get(self,request,format=None):
+        email = request.GET.get('email')
+        customer_url = 'http://14.98.78.69:2233/api/method/businessx.core.doctype.user.user.reset_password?user='+email+''
+        res2 = requests.get(url=customer_url)
+        return Response(json.loads(res2.text))
 
 class Rating(APIView):
     @csrf_exempt
@@ -3241,6 +3408,17 @@ class CommentSection(APIView):
         else:
             return Response({"status":"Already Liked"})
 
+class CheckPincode(APIView):
+    def get(self,request,format=None):
+        pincode = request.GET.get('pincode')
+        status = {'status':0}
+        API_URL =  'http://14.98.78.69:2233/api/resource/Pincode?fields=["name"]&filters=[["Pincode","pincode","=","'+pincode+'"]]'
+        res = requests.get(url=API_URL, verify=False)
+        json_data = json.loads(res.text)
+        if len(json_data['data']) > 0:
+            return Response({'status':1})
+        return Response({'status':0})
+
 
 class ReplySection(APIView):
     def get(self, request, format=None):
@@ -3694,4 +3872,3 @@ class Follow_Count(APIView):
         res = requests.get(url=API_URL, verify=False)
         json_data = json.loads(res.text)
         return Response({"count":len(json_data['data'])})
-
