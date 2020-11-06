@@ -469,9 +469,11 @@ def insert_profile(request):
 def insert_lead_user(request):
 
     
-    mobile_no = request.GET['mobile_no']
-    lead_name = request.GET['lead_name']
-    email_id= request.GET['email_id']
+    subject = request.GET['subject']
+    status = "Open"
+    customer = request.GET['customer']
+    sales_order= request.GET['sales_order']
+    description= request.GET['description']
     # MAHATA_API_URL = "http://alpha.mahattaart.com/api/customer"
     # headers = {'X-API-KEY': '3a78ab894457738d803358629ba42506ec9d12b9','Authorization':'Basic ZXJwYWRtaW46I21haGF0dGFlcnBAMzIxIw=='}
     # data2 = {'data': {"first_name":lead_name,"last_name":lead_name,"email_id":email_id,"contact":mobile_no} }
@@ -487,6 +489,36 @@ def insert_lead_user(request):
     pastebin_url = r.text 
     print("The pastebin URL is:%s"%pastebin_url)
     return HttpResponse(pastebin_url)
+
+
+# @api_view(['GET', 'POST','OPTIONS'])
+# def insert_issue(request):
+
+    
+#     subject = request.GET['subject']
+#     customer = request.GET['customer']
+#     sales_invoice= request.GET['sales_invoice']
+#     description= request.GET['description']
+#     issue_type=request.GET['issue_type']
+#     other_issue=request.GET['other_issue']
+    
+#     API_ENDPOINT = "http://14.98.78.69:2233/api/resource/Issue/"
+#     data = {'data': {"subject":subject,"customer":customer,"sales_order":sales_order,"description":description,"issue_type":issue_type} }
+#     data = json.dumps(data)
+#     r = requests.post(url = API_ENDPOINT, data = data)
+#     pastebin_url = r.text 
+#     print("The pastebin URL is:%s"%pastebin_url)
+#     return HttpResponse(pastebin_url)
+
+# class InsertIssue(APIView):
+#     def post(self,request,format=None):
+#         data = request.data
+#         print(data)
+#         data = json.dumps(data)
+#         API_URL = 'http://14.98.78.69:2233/api/resource/Issue'
+#         res2 = requests.post(url=API_URL, verify=False, data =data)
+#         print(res2.text)
+#         return Response({"lead":res2.text})
 
 @csrf_exempt
 def insert_india_mart_lead(request):
@@ -2254,18 +2286,22 @@ class ContactUs(APIView):
         return Response({"lead":res2.text})
 
 
+
 class CouponCode(APIView):
     def get(self,request,format=None):
         print("fsfdfdf")
+        
         # coupon_code = request.GET.get('coupon_code')
         p = []
         sid = get_sid()
         if 'email' in request.GET:
             email = request.GET.get('email')
             customer_name = get_customer_name(email)
-            customer_url2 = 'http://14.98.78.69:2233/api/resource/Coupon Used By Users?fields=["*"]&filters=[["Coupon Used By Users", "customer", "=", "'+customer_name+'"]]&limit_page_length=all'
+            customer_url2 = 'http://14.98.78.69:2233/api/resource/Coupon Code By Users?fields=["*"]&filters=[["Coupon Code By Users", "customer_name", "=", "'+customer_name+'"]]&limit_page_length=all'
             
             res2 = requests.get(url=customer_url2)
+            print(res2.text)
+            
             json_data = json.loads(res2.text)
             
             coupon_url = 'http://14.98.78.69:2233/api/resource/Coupon Code?fields=["*"]&limit_page_length=all'
@@ -2912,8 +2948,13 @@ class Website_Slider(APIView):
     @csrf_exempt
     def get(self,request,format=None):
         page =  request.GET.get('page')
+        if 'itemGroup' in request.GET:
+            itemGroup=request.GET.get('itemGroup')
+            API_URL =  'http://14.98.78.69:2233/api/resource/Website%20Slideshow?fields=["name","slider_space"]&filters=[["Website Slideshow","page","=","'+page+'"],["Website Slideshow","item_group","=","'+itemGroup+'"]]'
+        else:
+            API_URL =  'http://14.98.78.69:2233/api/resource/Website%20Slideshow?fields=["name","slider_space"]&filters=[["Website Slideshow","page","=","'+page+'"]]'
         sid = get_sid()
-        API_URL = 'http://14.98.78.69:2233/api/resource/Website%20Slideshow?fields=["name"]&filters=[["Website Slideshow","page","=","'+page+'"]]'
+        
         res2 = requests.get(url=API_URL)
         response_data = json.loads(res2.text)
         dict_ = {}
@@ -2925,8 +2966,9 @@ class Website_Slider(APIView):
             response_data_ = json.loads(res22.text)
             list_of_images = []
             for images in response_data_['data']['slideshow_items']:
-                list_of_images.append(images['image'])
-            dict_1 = {res['name']:list_of_images}
+                list_of_images.append({'image':images['image'],'category':images['linked_item_group']})
+            dict_1 = {res['slider_space']:list_of_images}
+            
             
             dict_.update(dict_1)
             
@@ -3132,6 +3174,39 @@ class Insert_Lead_(APIView):
         res2 = requests.post(url=API_URL, verify=False, data =data)
         print(res2.text)
         return Response({"lead":res2.text})
+
+class InsertIssue(APIView):
+    def post(self,request,format=None):
+
+        data = request.data
+        data = json.dumps(data)
+
+        
+        # print(request.data)
+        # subject= request.POST['subject'][0]
+        
+        # customer = get_customer_name( request.POST.get('email'))
+        # sales_invoice= request.POST['sales_invoice'][0]
+        # description= request.POST['description'][0]
+        # issue_type=request.POST['issue_type'][0]
+        # other_issue=request.POST['other_issue'][0]
+    
+        API_URL = "http://14.98.78.69:2233/api/resource/Issue/"
+        # data = {'data': {"subject":subject,"customer":customer,"sales_invoice":sales_invoice,"description":description,"issue_type":issue_type} }
+        # data = json.dumps(data)
+        res2 = requests.post(url=API_URL, verify=False, data =data)
+        print(res2.text)
+        return Response({"issue":res2.text})
+
+        # data = request.data
+        # customer = get_customer_name( request.GET.get('email'))
+        # print(data)
+        # data = json.dumps(data)
+        # API_URL = 'http://14.98.78.69:2233/api/resource/Issue'
+        # res2 = requests.post(url=API_URL, verify=False, data =data)
+        # print(res2.text)
+        # return Response({"lead":res2.text})
+
 
 class Get_Cateogary(APIView):
     def get(self,request,format=None):
@@ -3407,6 +3482,26 @@ class CommentSection(APIView):
             return Response({"data":resp_})
         else:
             return Response({"status":"Already Liked"})
+
+
+class UsedCoupon(APIView):
+    def get(self,request,format=None):
+        coupon_code = request.GET.get('coupon_code')
+        email = request.GET.get('email')
+        customer_name = get_customer_name(email)
+        customer_url =  'http://14.98.78.69:2233/api/resource/Coupon Code By Users?fields=["*"]&filters=[["Coupon Code By Users", "coupon_code", "=", "'+coupon_code+'"],["Coupon Code By Users", "customer", "=", "'+customer_name+'"]]&limit_page_length=all'
+        res2 = requests.get(url=customer_url)
+        print(res2.text)
+        return Response(json.loads(res2.text))
+        
+
+    def post(self, request, format=None):
+        data = request.data
+        data = json.dumps(data)
+        API_URL = 'http://14.98.78.69:2233/api/resource/Coupon Code By Users'
+        res2 = requests.post(url=API_URL, verify=False, data =data)
+        response_data = json.loads(res2.text)
+        return Response({"data":response_data['data']})
 
 class CheckPincode(APIView):
     def get(self,request,format=None):

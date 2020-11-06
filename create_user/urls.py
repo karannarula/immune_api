@@ -32,6 +32,7 @@ urlpatterns = [
     path('get_sales_item/',views.Get_SalesOrder.as_view()),
     path('contact_us/',views.ContactUs.as_view()),
     path('insert_lead/',views.Insert_Lead_.as_view()),
+    path('insert_issue/',views.InsertIssue.as_view()),
     path('get_benefits/',views.Get_Cateogary.as_view()),
     path('testimonials/',views.Testimonial.as_view()),
     path('like_getter/',views.Like_Getter.as_view()),
@@ -81,7 +82,6 @@ urlpatterns = [
     url(r'^products/popular/',views.popular_api,name='popular_api'),
     url(r'^brands/',views.brands,name='brands'),
     url(r'^item/',views.item,name='item'),
-    
     url(r'^get_item_details/',views.get_item_details,name='get_item_details'),
     url(r'^get_tax_information/',views.get_tax_information,name='get_tax_information'),
     url(r'^products/',views.products,name='products'),
@@ -100,6 +100,7 @@ urlpatterns = [
     url(r'^itemSearchApi/',views.ItemSearchAPI.as_view(),name='itemsearch'),
     path('profile/',views.Profile.as_view()),
     path('ratings/',views.Rating.as_view()),
+    path('UsedCoupon/',views.UsedCoupon.as_view()),
     path('website_slider/',views.Website_Slider.as_view()),
     path('single_opp_detail/',views.Single_Opp_details.as_view()),
     path('territories/',views.Get_Territories.as_view()),
