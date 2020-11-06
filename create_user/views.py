@@ -3179,18 +3179,14 @@ class InsertIssue(APIView):
     def post(self,request,format=None):
 
         data = request.data
+        sales_invoice = request.data['sales_invoice']
+        API_URL2 =  'http://14.98.78.69:2233/api/resource/Issue?fields=["name"]&filters=[["Issue","sales_invoice","=","'+sales_invoice+'"]]'
+        res22 = requests.get(url=API_URL2)
+        response = json.loads(res22.text)
+        if len(response['data'])>0:
+            return Response({"status":0,"message":"Issue already Exist"})
         data = json.dumps(data)
-
-        
-        # print(request.data)
-        # subject= request.POST['subject'][0]
-        
-        # customer = get_customer_name( request.POST.get('email'))
-        # sales_invoice= request.POST['sales_invoice'][0]
-        # description= request.POST['description'][0]
-        # issue_type=request.POST['issue_type'][0]
-        # other_issue=request.POST['other_issue'][0]
-    
+        # data = json.dumps(data)
         API_URL = "http://14.98.78.69:2233/api/resource/Issue/"
         # data = {'data': {"subject":subject,"customer":customer,"sales_invoice":sales_invoice,"description":description,"issue_type":issue_type} }
         # data = json.dumps(data)
