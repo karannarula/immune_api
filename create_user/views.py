@@ -2467,8 +2467,10 @@ def brands_list(request):
     brands_list = {}
     for l in list_of_brand:
         brands_url2 = 'http://14.98.78.69:2233/api/resource/Brand/'+l+'?sid='+sid+''
-        print(brands_url2)
+        # print(brands_url2)
         res2 = requests.get(brands_url2,verify=False)
+        # converted = res2.text.replace("'","\\'")
+        print(str(res2.content,"utf-8"))
         response_data2 = json.loads(res2.text)
         print(response_data2)
         brands_list.update({l:response_data2['data']})
@@ -2923,9 +2925,14 @@ class Rating(APIView):
         s5 = 5*r5
         total = s1+s2+s3+s4+s5
         total_r = r1+r2+r3+r4+r5
-        average = total/total_r
+        average = 0
+        try:
+
+            average = total/total_r
+
+        except:
+            pass
         average_dict = {"average":round(average,1)}
-        #sys.exit()
 
         review_rate = {"review":{"rating_1":r1,"rating_2":r2,"rating_3":r3,"rating_4":r4,"rating_5":r5}}
        
@@ -2948,14 +2955,20 @@ class Website_Slider(APIView):
     @csrf_exempt
     def get(self,request,format=None):
         page =  request.GET.get('page')
-        if 'itemGroup' in request.GET:
-            itemGroup=request.GET.get('itemGroup')
-            API_URL =  'http://14.98.78.69:2233/api/resource/Website%20Slideshow?fields=["name","slider_space"]&filters=[["Website Slideshow","page","=","'+page+'"],["Website Slideshow","item_group","=","'+itemGroup+'"]]'
+        # print(request.GET)
+        has_category = request.GET.get('has_category') 
+        if has_category == "1":
+            item_group=request.GET.get('item_group')
+            sub_category=request.GET.get('sub_category')
+            main_category=request.GET.get('main_category')
+            API_URL =  'http://14.98.78.69:2233/api/resource/Website%20Slideshow?fields=["name","slider_space"]&filters=[["Website Slideshow","page","=","'+page+'"],["Website Slideshow","item_group","=","'+item_group+'"],["Website Slideshow","sub_category","=","'+sub_category+'"],["Website Slideshow","main_category","=","'+main_category+'"]]'
         else:
             API_URL =  'http://14.98.78.69:2233/api/resource/Website%20Slideshow?fields=["name","slider_space"]&filters=[["Website Slideshow","page","=","'+page+'"]]'
         sid = get_sid()
-        
+        # print(API_URL)
+        # sys.exit()
         res2 = requests.get(url=API_URL)
+        print(res2)
         response_data = json.loads(res2.text)
         dict_ = {}
         image_list =[]
