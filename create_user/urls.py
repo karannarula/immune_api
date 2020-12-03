@@ -81,6 +81,7 @@ urlpatterns = [
     url(r'^single_item_detail/',views.single_item_detail,name='single_item_detail'),
     url(r'^products/popular/',views.popular_api,name='popular_api'),
     url(r'^brands/',views.brands,name='brands'),
+    url(r'^brand_data/',views.brand_data,name='brand_data'),
     url(r'^item/',views.item,name='item'),
     url(r'^get_item_details/',views.get_item_details,name='get_item_details'),
     url(r'^get_tax_information/',views.get_tax_information,name='get_tax_information'),
@@ -115,6 +116,7 @@ urlpatterns = [
     path('insert_sales_invoice/',views.Sales_Invoice.as_view()),
     path('get_lead_emm/',views.Get_Lead_Emm.as_view()),
     path('get_address_detail/',views.Get_Address_details.as_view()),
+    path('similar_category_items/',views.similar_category_items)
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -15,7 +15,7 @@ import random, string
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-import sys
+# import sys
 import multiprocessing
 from multiprocessing import Process, cpu_count, Manager
 import logging
@@ -49,6 +49,10 @@ from apiclient.http import MediaFileUpload
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import argparser, run_flow
+# encoding=utf8
+import sys
+# reload(sys)
+# sys.setdefaultencoding('utf8')
 
  
 # Create your views here.
@@ -2437,7 +2441,10 @@ def single_item_detail(request):
     for z in response_data['data']:
         single_api =  'http://14.98.78.69:2233/api/resource/Item/'+z['name']+'?sid='+sid+''
         res2 = requests.get(url = single_api,verify=False)
+        print(res2.text)
         response_data2 = json.loads(res2.text)
+        
+        # sys.exit()
         list_of_item.append(response_data2['data'])
     return Response({"item":list_of_item})
    
@@ -2459,6 +2466,17 @@ def brands(request):
     return Response({"brands":response_data})
 
 @api_view(['GET', 'POST','OPTIONS'])
+def brand_data(request):
+    id = request.GET['id']
+    sid = get_sid()
+    brands_url = 'http://14.98.78.69:2233/api/resource/Brand/'+id+'?sid='+sid+''
+    print(brands_url)
+    res = requests.get(brands_url,verify=False)
+    response_data = json.loads(res.text)
+    print(response_data)
+    return Response({"brands":response_data})
+
+@api_view(['GET', 'POST','OPTIONS'])
 def brands_list(request):
     
     id = request.GET['id']
@@ -2467,13 +2485,17 @@ def brands_list(request):
     brands_list = {}
     for l in list_of_brand:
         brands_url2 = 'http://14.98.78.69:2233/api/resource/Brand/'+l+'?sid='+sid+''
-        # print(brands_url2)
+        print(brands_url2)
         res2 = requests.get(brands_url2,verify=False)
+        # res2.encoding = "utf-8"
+        # print(res2.text)
+        # sys.exit()
         # converted = res2.text.replace("'","\\'")
-        print(str(res2.content,"utf-8"))
-        response_data2 = json.loads(res2.text)
-        print(response_data2)
-        brands_list.update({l:response_data2['data']})
+        # print(str(res2.content,"utf-8"))
+        # description = res2.text.encode('ascii', 'ignore').decode('ascii')
+        # response_data2 = json.loads(res2.text)
+        print(res2.text)
+        brands_list.update({l:res2.text})
 
     
     
@@ -3976,3 +3998,59 @@ class Follow_Count(APIView):
         res = requests.get(url=API_URL, verify=False)
         json_data = json.loads(res.text)
         return Response({"count":len(json_data['data'])})
+
+
+
+
+@api_view(['GET', 'POST','OPTIONS'])
+def similar_category_items(request):
+    # supplier = request.GET.get('supplier')
+    main_category = request.GET.get('main_category')
+    sub_category = request.GET.get('sub_category')
+    item_group = request.GET.get('item_group')
+    list_item=[]
+    fields='["Item","disabled","=","0"],["Item","has_variants","=","0"],["Item","main_category","=","'+main_category+'"],["Item","sub_category","=","'+sub_category+'"],["Item","item_group","=","'+item_group+'"]'
+    item_detail_api = 'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=['+fields+']&limit_page_length=10'
+    res = requests.get(url = item_detail_api,verify=False)
+    print(res.text)
+    response_data = json.loads(res.text)
+    list_item = response_data['data']
+
+    # for z in response_data['data']:
+    #     if supplier:
+ 
+    #         item_supplier_api = STATIC_URL+'/api/resource/Item Price?fields=["*"]&filters=[["Item Price","supplier","=","'+supplier[0]+'"],["Item Price","item_name","=","'+z['item_name']+'"]]'
+            
+    #         res11 = requests.get(item_supplier_api,verify=False)
+    #         # print(res11.text)
+    #         try:
+    #             ressupplier = json.loads(res11.text)
+    #             if len(ressupplier['data']) != 0:
+    #                 for rr in ressupplier['data']:
+    #                     z.update({"price_list":rr['price_list_rate']})
+    #                     z.update({"original_price":rr['original_price']})
+    #                     z.update({"stock":rr['stock']})
+    #             else:
+    #                 z.update({"price_list":0})
+    #                 z.update({"stock":0})
+    #                 z.update({"original_price":0})
+
+
+    #         except:
+    #             z.update({"price_list":0})
+    #             z.update({"stock":0})
+    #             z.update({"original_price":0})
+
+
+    #     list_item.append(z)
+    
+    random.shuffle(list_item)
+    return Response(list_item)
+
+    # print(response_data['data'])
+    # return Response(response_data['data'])
+
+
+
+
+
