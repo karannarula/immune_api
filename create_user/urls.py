@@ -80,6 +80,7 @@ urlpatterns = [
     url(r'^item_filter/',views.item_filter,name='item_filter'),
     url(r'^single_item_detail/',views.single_item_detail,name='single_item_detail'),
     url(r'^products/popular/',views.popular_api,name='popular_api'),
+    url(r'^products/recommend_product/',views.recommend_product,name='recommend_product'),
     url(r'^brands/',views.brands,name='brands'),
     url(r'^brand_data/',views.brand_data,name='brand_data'),
     url(r'^item/',views.item,name='item'),

@@ -506,7 +506,7 @@ def insert_lead_user(request):
 #     issue_type=request.GET['issue_type']
 #     other_issue=request.GET['other_issue']
     
-#     API_ENDPOINT = "http://14.98.78.69:2233/api/resource/Issue/"
+#     API_ENDPOINT = "https://admin.immunecircle.in/api/resource/Issue/"
 #     data = {'data': {"subject":subject,"customer":customer,"sales_order":sales_order,"description":description,"issue_type":issue_type} }
 #     data = json.dumps(data)
 #     r = requests.post(url = API_ENDPOINT, data = data)
@@ -519,7 +519,7 @@ def insert_lead_user(request):
 #         data = request.data
 #         print(data)
 #         data = json.dumps(data)
-#         API_URL = 'http://14.98.78.69:2233/api/resource/Issue'
+#         API_URL = 'https://admin.immunecircle.in/api/resource/Issue'
 #         res2 = requests.post(url=API_URL, verify=False, data =data)
 #         print(res2.text)
 #         return Response({"lead":res2.text})
@@ -2178,13 +2178,13 @@ class Sales_Invoice(APIView):
 def item_retrieval_api2(request):
     import collections
     parent_list = []
-    item_group_api = 'http://14.98.78.69:2233/api/resource/Item%20Group?limit_page_length=100&fields=["*"]&filters=[["Item Group","parent_item_group","=","All Item Groups"]]'
+    item_group_api = 'https://admin.immunecircle.in/api/resource/Item%20Group?limit_page_length=100&fields=["*"]&filters=[["Item Group","parent_item_group","=","All Item Groups"]]'
     res = requests.get(url = item_group_api,verify=False)
     response_data = json.loads(res.text)
     
 
 
-    item_group_api2 = 'http://14.98.78.69:2233/api/resource/Item%20Group?limit_page_length=&fields=["*"]'
+    item_group_api2 = 'https://admin.immunecircle.in/api/resource/Item%20Group?limit_page_length=&fields=["*"]'
     res2 = requests.get(url = item_group_api2,verify=False)
     response_data2 = json.loads(res2.text)
     
@@ -2255,7 +2255,7 @@ def item_retrieval_api2(request):
 class SupplierInsert(APIView):
     def get(self,request,format=None):
         coupon_code = request.GET.get('coupon_code')
-        customer_url =  'http://14.98.78.69:2233/api/resource/Supplier?fields=["*"]&limit_page_length=all'
+        customer_url =  'https://admin.immunecircle.in/api/resource/Supplier?fields=["*"]&limit_page_length=all'
         res2 = requests.get(url=customer_url)
 
         return Response(json.loads(res2.text))
@@ -2264,7 +2264,7 @@ class SupplierInsert(APIView):
         data = request.data
         print(data)
         supplier = request.data['supplier_name']
-        API_URL2 =  'http://14.98.78.69:2233/api/resource/Supplier?fields=["name"]&filters=[["Supplier","supplier_name","=","'+supplier+'"]]'
+        API_URL2 =  'https://admin.immunecircle.in/api/resource/Supplier?fields=["name"]&filters=[["Supplier","supplier_name","=","'+supplier+'"]]'
         res22 = requests.get(url=API_URL2)
         response = json.loads(res22.text)
         if len(response['data'])>0:
@@ -2272,7 +2272,7 @@ class SupplierInsert(APIView):
         data = json.dumps(data)
         sid = get_sid()
         print(sid)
-        API_URL =  'http://14.98.78.69:2233/api/resource/Supplier?sid='+sid+''
+        API_URL =  'https://admin.immunecircle.in/api/resource/Supplier?sid='+sid+''
         res2 = requests.post(url=API_URL, verify=False, data =data)
         print(res2)
         response_data = json.loads(res2.text)
@@ -2284,7 +2284,7 @@ class ContactUs(APIView):
         data = request.data
         print(data)
         data = json.dumps(data)
-        API_URL = 'http://14.98.78.69:2233/api/resource/Lead'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Lead'
         res2 = requests.post(url=API_URL, verify=False, data =data)
         print(res2.text)
         return Response({"lead":res2.text})
@@ -2301,14 +2301,14 @@ class CouponCode(APIView):
         if 'email' in request.GET:
             email = request.GET.get('email')
             customer_name = get_customer_name(email)
-            customer_url2 = 'http://14.98.78.69:2233/api/resource/Coupon Code By Users?fields=["*"]&filters=[["Coupon Code By Users", "customer_name", "=", "'+customer_name+'"]]&limit_page_length=all'
+            customer_url2 = 'https://admin.immunecircle.in/api/resource/Coupon Code By Users?fields=["*"]&filters=[["Coupon Code By Users", "customer_name", "=", "'+customer_name+'"]]&limit_page_length=all'
             
             res2 = requests.get(url=customer_url2)
             print(res2.text)
             
             json_data = json.loads(res2.text)
             
-            coupon_url = 'http://14.98.78.69:2233/api/resource/Coupon Code?fields=["*"]&limit_page_length=all'
+            coupon_url = 'https://admin.immunecircle.in/api/resource/Coupon Code?fields=["*"]&limit_page_length=all'
             res_coupon = requests.get(url=coupon_url)
             
             res_json_coupon = json.loads(res_coupon.text)
@@ -2317,14 +2317,14 @@ class CouponCode(APIView):
             for r in res_json_coupon['data']:
                 if not any(d['coupon_code'] == r['name'] for d in json_data['data']):
                     print(r)
-                    customer_url3 =  'http://14.98.78.69:2233/api/resource/Coupon Code/'+r['name']+'?sid='+sid+''
+                    customer_url3 =  'https://admin.immunecircle.in/api/resource/Coupon Code/'+r['name']+'?sid='+sid+''
                     print(customer_url3)
                     res22 = requests.get(url=customer_url3)
                     json_res22 = json.loads(res22.text)
                     p.append(json_res22['data'])
             return Response({"data":p})
         else:
-            customer_url =  'http://14.98.78.69:2233/api/resource/Coupon Code?fields=["*"]&limit_page_length=all'
+            customer_url =  'https://admin.immunecircle.in/api/resource/Coupon Code?fields=["*"]&limit_page_length=all'
             print(customer_url)
             res2 = requests.get(url=customer_url)
 
@@ -2357,11 +2357,11 @@ def item_detail(request):
     sub_item_group = request.GET['sub_item_group']
     main_item_group = request.GET['main_item_group']
     if item_group=="":
-        item_detail_api = 'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","sub_category","=","'+sub_item_group+'"],["Item","main_category","=","'+main_item_group+'"]]'
+        item_detail_api = 'https://admin.immunecircle.in/api/resource/Item?fields=["*"]&filters=[["Item","sub_category","=","'+sub_item_group+'"],["Item","main_category","=","'+main_item_group+'"]]'
     elif sub_item_group=="":
-        item_detail_api = 'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","item_group","=","'+item_group+'"],["Item","main_category","=","'+main_item_group+'"]]'
+        item_detail_api = 'https://admin.immunecircle.in/api/resource/Item?fields=["*"]&filters=[["Item","item_group","=","'+item_group+'"],["Item","main_category","=","'+main_item_group+'"]]'
     else:
-        item_detail_api = 'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","sub_category","=","'+sub_item_group+'"],["Item","item_group","=","'+item_group+'"],["Item","main_category","=","'+main_item_group+'"]]'
+        item_detail_api = 'https://admin.immunecircle.in/api/resource/Item?fields=["*"]&filters=[["Item","sub_category","=","'+sub_item_group+'"],["Item","item_group","=","'+item_group+'"],["Item","main_category","=","'+main_item_group+'"]]'
         
 
 
@@ -2407,7 +2407,7 @@ def item_filter(request):
         else:
             fields+='["Item","'+params+'","=","'+GET[''+params+'']+'"],'
     
-    item_detail_api =  'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=['+fields+']&limit_page_length=all'
+    item_detail_api =  'https://admin.immunecircle.in/api/resource/Item?fields=["*"]&filters=['+fields+']&limit_page_length=all'
     
     item_detail_api=item_detail_api.replace(",]","]")
     res = requests.get(url = item_detail_api,verify=False)
@@ -2429,9 +2429,9 @@ def single_item_detail(request):
     name = request.GET['name']
     variant_of = request.GET['variant_of']
     if variant_of != "":
-        single_item_api = 'http://14.98.78.69:2233/api/resource/Item?fields=["name"]&filters=[["Item","variant_of","=","'+variant_of+'"]]'
+        single_item_api = 'https://admin.immunecircle.in/api/resource/Item?fields=["name"]&filters=[["Item","variant_of","=","'+variant_of+'"]]'
     else:
-        single_item_api = 'http://14.98.78.69:2233/api/resource/Item?fields=["name"]&filters=[["Item","name","=","'+name+'"]]'
+        single_item_api = 'https://admin.immunecircle.in/api/resource/Item?fields=["name"]&filters=[["Item","name","=","'+name+'"]]'
 
 
     res = requests.get(url = single_item_api,verify=False)
@@ -2439,7 +2439,7 @@ def single_item_detail(request):
     list_of_item = []
     sid = get_sid()
     for z in response_data['data']:
-        single_api =  'http://14.98.78.69:2233/api/resource/Item/'+z['name']+'?sid='+sid+''
+        single_api =  'https://admin.immunecircle.in/api/resource/Item/'+z['name']+'?sid='+sid+''
         res2 = requests.get(url = single_api,verify=False)
         print(res2.text)
         response_data2 = json.loads(res2.text)
@@ -2451,7 +2451,14 @@ def single_item_detail(request):
     
 @api_view(['GET', 'POST','OPTIONS'])
 def popular_api(request):
-    single_item_api = 'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","popular_product","=","1"]]&limit_page_length='
+    single_item_api = 'https://admin.immunecircle.in/api/resource/Item?fields=["*"]&filters=[["Item","popular_product","=","1"]]&limit_page_length='
+    res = requests.get(url = single_item_api,verify=False)
+    response_data = json.loads(res.text)
+    return Response({"item":response_data})
+
+@api_view(['GET', 'POST','OPTIONS'])
+def recommend_product(request):
+    single_item_api = 'https://admin.immunecircle.in/api/resource/Item?fields=["*"]&filters=[["Item","recommend_product","=","1"]]&limit_page_length='
     res = requests.get(url = single_item_api,verify=False)
     response_data = json.loads(res.text)
     return Response({"item":response_data})
@@ -2460,7 +2467,7 @@ def popular_api(request):
 @api_view(['GET', 'POST','OPTIONS'])
 def brands(request):
     
-    brands_url = 'http://14.98.78.69:2233/api/resource/Brand?fields=["*"]'
+    brands_url = 'https://admin.immunecircle.in/api/resource/Brand?fields=["*"]'
     res = requests.get(brands_url,verify=False)
     response_data = json.loads(res.text)
     return Response({"brands":response_data})
@@ -2469,7 +2476,7 @@ def brands(request):
 def brand_data(request):
     id = request.GET['id']
     sid = get_sid()
-    brands_url = 'http://14.98.78.69:2233/api/resource/Brand/'+id+'?sid='+sid+''
+    brands_url = 'https://admin.immunecircle.in/api/resource/Brand/'+id+'?sid='+sid+''
     print(brands_url)
     res = requests.get(brands_url,verify=False)
     response_data = json.loads(res.text)
@@ -2484,7 +2491,7 @@ def brands_list(request):
     sid = get_sid()
     brands_list = {}
     for l in list_of_brand:
-        brands_url2 = 'http://14.98.78.69:2233/api/resource/Brand/'+l+'?sid='+sid+''
+        brands_url2 = 'https://admin.immunecircle.in/api/resource/Brand/'+l+'?sid='+sid+''
         print(brands_url2)
         res2 = requests.get(brands_url2,verify=False)
         # res2.encoding = "utf-8"
@@ -2508,7 +2515,7 @@ def item(request):
     list_of_brand = item_code_2.split(',')
     brands_list = []
     for l in list_of_brand:
-        brands_url = 'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","name","=","'+l+'"]]'
+        brands_url = 'https://admin.immunecircle.in/api/resource/Item?fields=["*"]&filters=[["Item","name","=","'+l+'"]]'
         res = requests.get(brands_url,verify=False)
         response_data = json.loads(res.text)
         brands_list.append(response_data['data'])
@@ -2525,7 +2532,7 @@ def get_tax_information(request):
     res2 = {}
     for l in list_of_brand:
         
-        item_detail_api1 = 'http://14.98.78.69:2233/api/resource/Item/'+l+'?sid='+sid+''
+        item_detail_api1 = 'https://admin.immunecircle.in/api/resource/Item/'+l+'?sid='+sid+''
         res = requests.get(item_detail_api1,verify=False)
         response_data = json.loads(res.text)
         res1 = {l:response_data['data']['taxes']}
@@ -2543,7 +2550,7 @@ def get_item_details(request):
     res2 = {}
     for l in list_of_brand:
         
-        item_detail_api1 = 'http://14.98.78.69:2233/api/resource/Item/'+l+'?sid='+sid+''
+        item_detail_api1 = 'https://admin.immunecircle.in/api/resource/Item/'+l+'?sid='+sid+''
         res = requests.get(item_detail_api1,verify=False)
         response_data = json.loads(res.text)
         res1 = {l:response_data['data']}
@@ -2568,7 +2575,7 @@ def products(request):
     # sys.exit()
     t_length = 0
     for l in list_of_brand:
-        item_detail_api1 =  'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","item_group","=","'+l+'"],["Item","main_category","=","'+main_item_group+'"],["Item","sub_category","=","'+sub_item_group+'"],["Item","has_variants","=","0"]]&limit_page_length=all'
+        item_detail_api1 =  'https://admin.immunecircle.in/api/resource/Item?fields=["*"]&filters=[["Item","item_group","=","'+l+'"],["Item","main_category","=","'+main_item_group+'"],["Item","sub_category","=","'+sub_item_group+'"],["Item","has_variants","=","0"]]&limit_page_length=all'
         
 
         res1 = requests.get(item_detail_api1,verify=False)
@@ -2580,7 +2587,7 @@ def products(request):
     for l in list_of_brand:
         if sub_item_group =="" or main_item_group=="":
 
-            item_detail_api =  'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","item_group","=","'+l+'"],["Item","main_category","=","'+main_item_group+'"],["Item","sub_category","=","'+sub_item_group+'"],["Item","has_variants","=","0"]]&limit_page_length='+page_limit_length+''
+            item_detail_api =  'https://admin.immunecircle.in/api/resource/Item?fields=["*"]&filters=[["Item","item_group","=","'+l+'"],["Item","main_category","=","'+main_item_group+'"],["Item","sub_category","=","'+sub_item_group+'"],["Item","has_variants","=","0"]]&limit_page_length='+page_limit_length+''
 
         
         res = requests.get(item_detail_api,verify=False)
@@ -2605,7 +2612,7 @@ def login(request):
     response_data = {}
     print(usr)
     
-    URL = "http://14.98.78.69:2233/api/method/login"
+    URL = "https://admin.immunecircle.in/api/method/login"
     PARAMS = {'usr':usr,'pwd':pwd}
     req = requests.get(url = URL, params = PARAMS)
     data = req.text
@@ -2619,14 +2626,14 @@ def login(request):
             response_data['sid'] = data_p_type['sid']
             response_data['full_name'] = data_p_type['full_name']
             response_data['email'] = data_p_type['email']
-            USER_API = 'http://14.98.78.69:2233/api/resource/Customer?fields=["*"]&filters=[["Customer","name","=","'+response_data['full_name']+'"]]'
+            USER_API = 'https://admin.immunecircle.in/api/resource/Customer?fields=["*"]&filters=[["Customer","name","=","'+response_data['full_name']+'"]]'
             print(USER_API)
             req2 = requests.get(url = USER_API)
             response_data2 = json.loads(req2.text)
             
             if not response_data2['data']:
                 
-                API_URL = 'http://14.98.78.69:2233/api/resource/Customer'
+                API_URL = 'https://admin.immunecircle.in/api/resource/Customer'
                 data2 = {"customer_name":data_p_type['full_name'],"owner":data_p_type['email'],"email_id":data_p_type['email']} 
                 data2 = json.dumps(data2)
                 res2 = requests.post(url=API_URL, verify=False, data =data2)
@@ -2645,7 +2652,7 @@ def get_sid():
     usr = 'administrator'
     pwd = 'KineticX1234'
     response_data = {}
-    URL = "http://14.98.78.69:2233/api/method/login"
+    URL = "https://admin.immunecircle.in/api/method/login"
     PARAMS = {'usr':usr,'pwd':pwd}
     req = requests.get(url = URL, params = PARAMS)
     data = req.text
@@ -2673,8 +2680,8 @@ def add_address(request):
     email = request.POST['email']
     state = request.POST['state']
     address_line2 = request.POST['address_line2']
-    API_ENDPOINT = "http://14.98.78.69:2233/api/resource/Address"
-    customer_name = 'http://14.98.78.69:2233/api/resource/Customer?fields=["name"]&filters=[["Customer", "owner", "=", "'+email+'"]]'
+    API_ENDPOINT = "https://admin.immunecircle.in/api/resource/Address"
+    customer_name = 'https://admin.immunecircle.in/api/resource/Customer?fields=["name"]&filters=[["Customer", "owner", "=", "'+email+'"]]'
     res = requests.get(url = customer_name,verify=False)
     data_cust = json.loads(res.text)
 
@@ -2690,7 +2697,7 @@ def add_address(request):
 def email_sign_up(request):
     email = request.POST['email']
     full_name = request.POST['full_name']
-    API_ENDPOINT = 'http://14.98.78.69:2233/api/method/businessx.core.doctype.user.user.sign_up?email='+email+'&full_name='+full_name+'&&redirect_to='
+    API_ENDPOINT = 'https://admin.immunecircle.in/api/method/businessx.core.doctype.user.user.sign_up?email='+email+'&full_name='+full_name+'&&redirect_to='
     res = requests.get(API_ENDPOINT,verify=False)
     print(res.text)
     response_data = json.loads(res.text)
@@ -2700,7 +2707,7 @@ def email_sign_up(request):
 @api_view(['GET', 'POST','OPTIONS'])
 def get_address(request):
     email = request.GET['email']
-    API_ENDPOINT = 'http://14.98.78.69:2233/api/resource/Address?fields=["*"]&filters=[["Address","owner","=","'+email+'"]]'
+    API_ENDPOINT = 'https://admin.immunecircle.in/api/resource/Address?fields=["*"]&filters=[["Address","owner","=","'+email+'"]]'
     res2 = requests.get(url=API_ENDPOINT, verify=False)
     print(res2.text)
     return Response({"address":json.loads(res2.text)})
@@ -2718,7 +2725,7 @@ def update_address(request):
     phone = request.POST['phone']
     sid =  request.POST['sid']
     state =  request.POST['state']
-    API_ENDPOINT = "http://14.98.78.69:2233/api/resource/Address/"+name+"?sid="+sid+""
+    API_ENDPOINT = "https://admin.immunecircle.in/api/resource/Address/"+name+"?sid="+sid+""
     data = {"address_line2":address_line2,"state":state,"pincode":pincode,"email_id":email_id,"phone":phone,"owner":email,"address_line1":address_line1,"city":city,"address_title":address_title,"owner":email,"sid":sid}
     data = json.dumps(data)
     res2 = requests.put(url=API_ENDPOINT, verify=False, data =data)
@@ -2731,7 +2738,7 @@ def delete_address(request):
     
     event_id = request.data['address_name']
     sid = get_sid()
-    event_url = 'http://14.98.78.69:2233/api/resource/Address/'+event_id+'?sid='+sid+''
+    event_url = 'https://admin.immunecircle.in/api/resource/Address/'+event_id+'?sid='+sid+''
     r = requests.delete(event_url)
     print(r.text)
     return Response({"status":json.loads(r.text)})
@@ -2747,18 +2754,18 @@ def get_sales_invoice(request):
     print(sid)
     
     customer_name = get_customer_name(customer_email)
-    s_inv_name1 = 'http://14.98.78.69:2233/api/resource/Sales%20Invoice?fields=["name"]&filters=[["Sales%20Invoice","customer","=","'+customer_name+'"]]&limit_page_length=all'
+    s_inv_name1 = 'https://admin.immunecircle.in/api/resource/Sales%20Invoice?fields=["name"]&filters=[["Sales%20Invoice","customer","=","'+customer_name+'"]]&limit_page_length=all'
     res21 = requests.get(url = s_inv_name1,verify=False)
     data_cust21 = json.loads(res21.text)
     
     total_length = len(data_cust21['data'])
-    s_inv_name = 'http://14.98.78.69:2233/api/resource/Sales%20Invoice?fields=["name"]&filters=[["Sales%20Invoice","customer","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
+    s_inv_name = 'https://admin.immunecircle.in/api/resource/Sales%20Invoice?fields=["name"]&filters=[["Sales%20Invoice","customer","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
     res2 = requests.get(url = s_inv_name,verify=False)
     data_cust2 = json.loads(res2.text)
     item_data = []
     for orders in data_cust2['data']:
         
-        s_inv_data = 'http://14.98.78.69:2233/api/resource/Sales Invoice/'+orders['name']+'?sid='+sid+''
+        s_inv_data = 'https://admin.immunecircle.in/api/resource/Sales Invoice/'+orders['name']+'?sid='+sid+''
         res3 = requests.get(url = s_inv_data,verify=False)
         data_cust3 = json.loads(res3.text)
         item_data.append(data_cust3['data'])
@@ -2771,11 +2778,11 @@ def add_to_cart(request):
     email = request.POST['email']
     
     customer_address = request.POST['customer_address']
-    customer_name = 'http://14.98.78.69:2233/api/resource/Customer?fields=["name"]&filters=[["Customer", "owner", "=", "'+email+'"]]'
+    customer_name = 'https://admin.immunecircle.in/api/resource/Customer?fields=["name"]&filters=[["Customer", "owner", "=", "'+email+'"]]'
     res = requests.get(url = customer_name,verify=False)
     data_cust = json.loads(res.text)
 
-    API_ENDPOINT2 = "http://14.98.78.69:2233/api/resource/Sales Order"
+    API_ENDPOINT2 = "https://admin.immunecircle.in/api/resource/Sales Order"
     items = request.POST['items']
     items = json.loads(items)
 
@@ -2787,19 +2794,19 @@ def add_to_cart(request):
         z = {}
         z = i
         i.update({"sales_order":res_data['data']['name']})
-        API_ENDPOINT = "http://14.98.78.69:2233/api/resource/Sales Invoice"
+        API_ENDPOINT = "https://admin.immunecircle.in/api/resource/Sales Invoice"
 
         data = {"order_number":res_data['data']['name'],"customer_address":customer_address,"company":"KIneticx","customer":data_cust['data'][0]['name'],"items":[z ],"payments":[{"mode_of_payment":"Cash"}],"docstatus":1,"api":1}
         data = json.dumps(data)
         res2 = requests.post(url=API_ENDPOINT, verify=False, data =data)
     item_res = json.loads(res22.text)
-    API_COUPON_CODE_CHECK = 'http://14.98.78.69:2233/api/resource/Coupon Code?fields=["status"]&filters=[["Coupon Code","customer","=","'+data_cust['data'][0]['name']+'"]]'
+    API_COUPON_CODE_CHECK = 'https://admin.immunecircle.in/api/resource/Coupon Code?fields=["status"]&filters=[["Coupon Code","customer","=","'+data_cust['data'][0]['name']+'"]]'
     res_check = requests.get(url=API_COUPON_CODE_CHECK,verify=False)
     res_check1 = json.loads(res_check.text)
     
     if len(res_check1['data']) > 0:
         if res_check1['data'][0]['status'] == "Disabled":
-            API_COUPON_CODE = 'http://14.98.78.69:2233/api/resource/Coupon Code'
+            API_COUPON_CODE = 'https://admin.immunecircle.in/api/resource/Coupon Code'
             #?fields=["name"]&filters=[["Coupon Code",""]]
             import datetime as d1
             x = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(7))
@@ -2813,7 +2820,7 @@ def add_to_cart(request):
             res_25_check = json.loads(res25.text)
             item_res.update({"coupon":res_25_check['data']})
     else:
-        API_COUPON_CODE = 'http://14.98.78.69:2233/api/resource/Coupon Code'
+        API_COUPON_CODE = 'https://admin.immunecircle.in/api/resource/Coupon Code'
         #?fields=["name"]&filters=[["Coupon Code",""]]
         import datetime as d1
         x = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(7))
@@ -2831,7 +2838,7 @@ def add_to_cart(request):
     
     
     
-    # API_ENDPOINT = "http://14.98.78.69:2233/api/resource/Sales Invoice"
+    # API_ENDPOINT = "https://admin.immunecircle.in/api/resource/Sales Invoice"
     # data = {"customer_address":customer_address,"company":"KIneticx","customer":data_cust['data'][0]['name'],"items":items,"payments":[{"mode_of_payment":"Cash"}],"docstatus":1,"api":1}
     # data = json.dumps(data)
     # res2 = requests.post(url=API_ENDPOINT, verify=False, data =data)
@@ -2843,7 +2850,7 @@ class Profile(APIView):
     @csrf_exempt
     def get(self,request,format=None):
         email = request.GET.get('email')
-        API_URL = 'http://14.98.78.69:2233/api/resource/User?fields=["*"]&filters=[["User","email","=","'+email+'"]]'
+        API_URL = 'https://admin.immunecircle.in/api/resource/User?fields=["*"]&filters=[["User","email","=","'+email+'"]]'
         
         res2 = requests.get(url=API_URL)
         return Response({"user":json.loads(res2.text)})
@@ -2858,7 +2865,7 @@ class Profile(APIView):
         location = request.data['location']
         name = request.data['email']
         sid = get_sid()
-        API_URL = "http://14.98.78.69:2233/api/resource/User/"+name+"?sid="+sid+""
+        API_URL = "https://admin.immunecircle.in/api/resource/User/"+name+"?sid="+sid+""
         data2 = {"gender":gender,"profession":profession,"qualification":qualification,"bio":bio,"phone":phone,"birth_date":birth_date,"location":location} 
         data2 = json.dumps(data2)
         res2 = requests.put(url=API_URL, verify=False, data =data2)
@@ -2869,7 +2876,7 @@ class Profile(APIView):
 #     def get(self,request,format=None):
 #         email = request.GET.get('email')
 #         sid = get_sid()
-#         API_URL = "http://14.98.78.69:2233/api/resource/User/"+email+"?sid="+sid+""
+#         API_URL = "https://admin.immunecircle.in/api/resource/User/"+email+"?sid="+sid+""
         
 
         
@@ -2879,9 +2886,9 @@ class Profile(APIView):
 class ItemSearchAPI(APIView):
     def get(self,request,format=None):
         search = request.GET.get('search')
-        item_name_url =  'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","item_name","LIKE","%'+search+'%"]]'
-        item_group_url =  'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","item_group","LIKE","%'+search+'%"]]'
-        item_desc_url =  'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=[["Item","description","LIKE","%'+search+'%"]]'
+        item_name_url =  'https://admin.immunecircle.in/api/resource/Item?fields=["*"]&filters=[["Item","item_name","LIKE","%'+search+'%"]]'
+        item_group_url =  'https://admin.immunecircle.in/api/resource/Item?fields=["*"]&filters=[["Item","item_group","LIKE","%'+search+'%"]]'
+        item_desc_url =  'https://admin.immunecircle.in/api/resource/Item?fields=["*"]&filters=[["Item","description","LIKE","%'+search+'%"]]'
         l = ["item_name_url","item_group_url"]
         result_array = []
         for z in range(0,3):
@@ -2903,7 +2910,7 @@ class ItemSearchAPI(APIView):
 class ForgotPassword(APIView):
     def get(self,request,format=None):
         email = request.GET.get('email')
-        customer_url = 'http://14.98.78.69:2233/api/method/businessx.core.doctype.user.user.reset_password?user='+email+''
+        customer_url = 'https://admin.immunecircle.in/api/method/businessx.core.doctype.user.user.reset_password?user='+email+''
         res2 = requests.get(url=customer_url)
         return Response(json.loads(res2.text))
 
@@ -2916,10 +2923,10 @@ class Rating(APIView):
             next_rate = str(next_rate)
         except:
             next_rate = "3"
-        API_URL = 'http://14.98.78.69:2233/api/resource/Ratings?fields=["*"]&filters=[["Ratings","item_code","=","'+item_name+'"]]&limit_start='+next_rate+'&limit_page_length=3'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Ratings?fields=["*"]&filters=[["Ratings","item_code","=","'+item_name+'"]]&limit_start='+next_rate+'&limit_page_length=3'
         res2 = requests.get(url=API_URL)
         response_data = json.loads(res2.text)
-        API_URL2 = 'http://14.98.78.69:2233/api/resource/Ratings?fields=["*"]&filters=[["Ratings","item_code","=","'+item_name+'"]]&limit_page_length=all'
+        API_URL2 = 'https://admin.immunecircle.in/api/resource/Ratings?fields=["*"]&filters=[["Ratings","item_code","=","'+item_name+'"]]&limit_page_length=all'
         res22 = requests.get(url=API_URL2)
         response_data2 = json.loads(res22.text)
         review_rate = {"rating_1":0,"rating_2":0,"rating_3":0,"rating4":0,"rating_5":0}
@@ -2966,7 +2973,7 @@ class Rating(APIView):
         data = json.dumps(data)
         data2 = json.dumps(data)
         
-        API_URL = 'http://14.98.78.69:2233/api/resource/Ratings'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Ratings'
         res2 = requests.post(url=API_URL, verify=False, data =data)
         print(res2.text)
         return Response({"rating":"Updated Successfully"})
@@ -2983,9 +2990,9 @@ class Website_Slider(APIView):
             item_group=request.GET.get('item_group')
             sub_category=request.GET.get('sub_category')
             main_category=request.GET.get('main_category')
-            API_URL =  'http://14.98.78.69:2233/api/resource/Website%20Slideshow?fields=["name","slider_space"]&filters=[["Website Slideshow","page","=","'+page+'"],["Website Slideshow","item_group","=","'+item_group+'"],["Website Slideshow","sub_category","=","'+sub_category+'"],["Website Slideshow","main_category","=","'+main_category+'"]]'
+            API_URL =  'https://admin.immunecircle.in/api/resource/Website%20Slideshow?fields=["name","slider_space"]&filters=[["Website Slideshow","page","=","'+page+'"],["Website Slideshow","item_group","=","'+item_group+'"],["Website Slideshow","sub_category","=","'+sub_category+'"],["Website Slideshow","main_category","=","'+main_category+'"]]'
         else:
-            API_URL =  'http://14.98.78.69:2233/api/resource/Website%20Slideshow?fields=["name","slider_space"]&filters=[["Website Slideshow","page","=","'+page+'"]]'
+            API_URL =  'https://admin.immunecircle.in/api/resource/Website%20Slideshow?fields=["name","slider_space"]&filters=[["Website Slideshow","page","=","'+page+'"]]'
         sid = get_sid()
         # print(API_URL)
         # sys.exit()
@@ -2996,7 +3003,7 @@ class Website_Slider(APIView):
         image_list =[]
         for res in response_data['data']:
             
-            API_URL_ = 'http://14.98.78.69:2233/api/resource/Website Slideshow/'+res['name']+'?sid='+sid+''
+            API_URL_ = 'https://admin.immunecircle.in/api/resource/Website Slideshow/'+res['name']+'?sid='+sid+''
             res22 = requests.get(url=API_URL_ )
             response_data_ = json.loads(res22.text)
             list_of_images = []
@@ -3015,14 +3022,14 @@ class Image_Upload(APIView):
         sid = get_sid()
         data = request.data
         data = json.dumps(data)
-        API_URL = 'http://14.98.78.69:2233/api/method/businessx.handler.uploadfile1?sid='+sid+''
+        API_URL = 'https://admin.immunecircle.in/api/method/businessx.handler.uploadfile1?sid='+sid+''
 
         res2 = requests.post(url=API_URL, verify=False, data =data)
         if request.data['upload']==1:
 
             image_res = json.loads(res2.text)
             data1 = request.data
-            APi_User = 'http://14.98.78.69:2233/api/resource/User/'+data1['docname']+''
+            APi_User = 'https://admin.immunecircle.in/api/resource/User/'+data1['docname']+''
             data2 = {'user_image':image_res['message']['file_url']}
             data3 = json.dumps(data2)
             res21 = requests.put(url=APi_User, verify=False, data =data3)
@@ -3040,12 +3047,12 @@ class Cover_Image_Upload(APIView):
         sid = get_sid()
         data = request.data
         data = json.dumps(data)
-        API_URL = 'http://14.98.78.69:2233/api/method/businessx.handler.uploadfile1?sid='+sid+''
+        API_URL = 'https://admin.immunecircle.in/api/method/businessx.handler.uploadfile1?sid='+sid+''
 
         res2 = requests.post(url=API_URL, verify=False, data =data)
         image_res = json.loads(res2.text)
         data1 = request.data
-        APi_User = 'http://14.98.78.69:2233/api/resource/User/'+data1['docname']+''
+        APi_User = 'https://admin.immunecircle.in/api/resource/User/'+data1['docname']+''
         data2 = {'background_image':image_res['message']['file_url']}
         data3 = json.dumps(data2)
         res21 = requests.put(url=APi_User, verify=False, data =data3)
@@ -3056,7 +3063,7 @@ class Cover_Image_Upload(APIView):
 
 class Testimonial(APIView):
     def get(self,request,format=None):
-        API_URL = 'http://14.98.78.69:2233/api/resource/Testimonials?fields=["*"]'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Testimonials?fields=["*"]'
         res2 = requests.get(url=API_URL, verify=False)
         testimonial_res = json.loads(res2.text)
         return Response({'testimonial':testimonial_res})
@@ -3065,19 +3072,19 @@ class Testimonial(APIView):
 @api_view(['GET', 'POST','OPTIONS'])
 def get_cart_item(request):
     email = request.GET['email']
-    customer_name = 'http://14.98.78.69:2233/api/resource/Customer?fields=["name"]&filters=[["Customer", "owner", "=", "'+email+'"]]'
+    customer_name = 'https://admin.immunecircle.in/api/resource/Customer?fields=["name"]&filters=[["Customer", "owner", "=", "'+email+'"]]'
     res = requests.get(url = customer_name,verify=False)
     data_cust = json.loads(res.text)
 
     sid = get_sid()
-    API_ENDPOINT2 = 'http://14.98.78.69:2233/api/resource/Quotation?fields=["name"]&filters=[["Quotation","customer","=","'+data_cust['data'][0]['name']+'"],["Quotation","docstatus","=","0"]]'
+    API_ENDPOINT2 = 'https://admin.immunecircle.in/api/resource/Quotation?fields=["name"]&filters=[["Quotation","customer","=","'+data_cust['data'][0]['name']+'"],["Quotation","docstatus","=","0"]]'
     
     r2 = requests.get(API_ENDPOINT2,verify=False)
     resp = json.loads(r2.text)
     
     
     if len(resp['data'])>0:
-        API_ENDPOINT = "http://14.98.78.69:2233/api/resource/Quotation/"+resp['data'][0]['name']+"?sid="+sid+""
+        API_ENDPOINT = "https://admin.immunecircle.in/api/resource/Quotation/"+resp['data'][0]['name']+"?sid="+sid+""
         res2 = requests.get(url=API_ENDPOINT, verify=False)
         print(res2.text)
         return Response({"items":json.loads(res2.text)})
@@ -3093,10 +3100,10 @@ def get_cart_item(request):
 def add_to_quotation(request):
     email = request.POST['email']
     customer_address = request.POST['customer_address']
-    customer_name = 'http://14.98.78.69:2233/api/resource/Customer?fields=["name"]&filters=[["Customer", "owner", "=", "'+email+'"]]'
+    customer_name = 'https://admin.immunecircle.in/api/resource/Customer?fields=["name"]&filters=[["Customer", "owner", "=", "'+email+'"]]'
     res = requests.get(url = customer_name,verify=False)
     data_cust = json.loads(res.text)
-    API_ENDPOINT = "http://14.98.78.69:2233/api/resource/Quotation"
+    API_ENDPOINT = "https://admin.immunecircle.in/api/resource/Quotation"
     
     items = request.POST['items']
     items = json.loads(items)
@@ -3111,25 +3118,25 @@ def add_to_quotation(request):
 def update_quotation(request):
     email = request.POST['email']
     customer_address = request.POST['customer_address']
-    customer_name = 'http://14.98.78.69:2233/api/resource/Customer?fields=["name"]&filters=[["Customer", "owner", "=", "'+email+'"]]'
+    customer_name = 'https://admin.immunecircle.in/api/resource/Customer?fields=["name"]&filters=[["Customer", "owner", "=", "'+email+'"]]'
     res = requests.get(url = customer_name,verify=False)
     data_cust = json.loads(res.text)
     print(data_cust)
     sid = get_sid()
     
-    API_ENDPOINT2 = 'http://14.98.78.69:2233/api/resource/Quotation?fields=["name"]&filters=[["Quotation","customer","=","'+data_cust['data'][0]['name']+'"]]'
+    API_ENDPOINT2 = 'https://admin.immunecircle.in/api/resource/Quotation?fields=["name"]&filters=[["Quotation","customer","=","'+data_cust['data'][0]['name']+'"]]'
     r2 = requests.get(API_ENDPOINT2,verify=False)
     resp = json.loads(r2.text)
     print(resp)
     
     # if len(resp['data'])>0:
-    #     API_ENDPOINT22 = "http://14.98.78.69:2233/api/resource/Quotation/"+resp['data'][0]['name']+"?sid="+sid+""
+    #     API_ENDPOINT22 = "https://admin.immunecircle.in/api/resource/Quotation/"+resp['data'][0]['name']+"?sid="+sid+""
     #     r = requests.delete(API_ENDPOINT22)
-    API_ENDPOINT = "http://14.98.78.69:2233/api/resource/Quotation/"+resp['data'][0]['name']+"?sid="+sid+""
+    API_ENDPOINT = "https://admin.immunecircle.in/api/resource/Quotation/"+resp['data'][0]['name']+"?sid="+sid+""
     items = request.POST['items']
     items = json.loads(items)
     if len(items)==0:
-        API_ENDPOINT22 = "http://14.98.78.69:2233/api/resource/Quotation/"+resp['data'][0]['name']+"?sid="+sid+""
+        API_ENDPOINT22 = "https://admin.immunecircle.in/api/resource/Quotation/"+resp['data'][0]['name']+"?sid="+sid+""
         r = requests.delete(API_ENDPOINT22)
         return Response({"items":json.loads(r.text)})
 
@@ -3146,7 +3153,7 @@ def update_quotation(request):
 class WishList(APIView):
     def get(self,request,format=None):
         customer_name = get_customer_name( request.GET.get('email'))
-        API_URL = 'http://14.98.78.69:2233/api/resource/Wishlist?fields=["*"]&filters=[["Wishlist","customer","=","'+customer_name+'"]]'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Wishlist?fields=["*"]&filters=[["Wishlist","customer","=","'+customer_name+'"]]'
         res2 = requests.get(url=API_URL, verify=False)
         testimonial_res = json.loads(res2.text)
         return Response({'wishlist':testimonial_res})
@@ -3154,7 +3161,7 @@ class WishList(APIView):
     def post(self,request,format=None):
         data = request.data
         data = json.dumps(data)
-        API_URL = 'http://14.98.78.69:2233/api/resource/Wishlist'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Wishlist'
         res2 = requests.post(url=API_URL, verify=False, data =data)
         print(res2.text)
         return Response({"wishlist":json.loads(res2.text)})
@@ -3169,13 +3176,13 @@ class Update_Review(APIView):
         name = request.data['name']
         
         data = json.dumps(data)
-        API_URL = 'http://14.98.78.69:2233/api/resource/Ratings/'+name+'?sid='+sid+''
+        API_URL = 'https://admin.immunecircle.in/api/resource/Ratings/'+name+'?sid='+sid+''
         res2 = requests.put(url=API_URL, verify=False, data =data)
         return Response({"review":res2.text})
 
 
 def get_customer_name(email):
-    customer_name = 'http://14.98.78.69:2233/api/resource/Customer?fields=["name"]&filters=[["Customer", "owner", "=", "'+email+'"]]'
+    customer_name = 'https://admin.immunecircle.in/api/resource/Customer?fields=["name"]&filters=[["Customer", "owner", "=", "'+email+'"]]'
     res = requests.get(url = customer_name,verify=False)
     data_cust = json.loads(res.text)
     return data_cust['data'][0]['name']
@@ -3187,11 +3194,11 @@ class Get_SalesOrder(APIView):
         sid = get_sid()
         lis = []
         res_Data = {}
-        API_URL = 'http://14.98.78.69:2233/api/resource/Sales Order?fields=["name"]&filters=[["Sales Order","customer","=","'+customer_name+'"]]'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Sales Order?fields=["name"]&filters=[["Sales Order","customer","=","'+customer_name+'"]]'
         res2 = requests.get(url=API_URL, verify=False)
         testimonial_res = json.loads(res2.text)
         for data in testimonial_res['data']:
-            APU_URL1 = 'http://14.98.78.69:2233/api/resource/Sales Order/'+data['name']+'?sid='+sid+''
+            APU_URL1 = 'https://admin.immunecircle.in/api/resource/Sales Order/'+data['name']+'?sid='+sid+''
             
             res22 = requests.get(url=APU_URL1, verify=False)
             testimonial_res1 = json.loads(res22.text)
@@ -3205,7 +3212,7 @@ class Insert_Lead_(APIView):
     def post(self,request,format=None):
         data = request.data
         data = json.dumps(data)
-        API_URL = 'http://14.98.78.69:2233/api/resource/Lead'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Lead'
         res2 = requests.post(url=API_URL, verify=False, data =data)
         print(res2.text)
         return Response({"lead":res2.text})
@@ -3215,14 +3222,14 @@ class InsertIssue(APIView):
 
         data = request.data
         sales_invoice = request.data['sales_invoice']
-        API_URL2 =  'http://14.98.78.69:2233/api/resource/Issue?fields=["name"]&filters=[["Issue","sales_invoice","=","'+sales_invoice+'"]]'
+        API_URL2 =  'https://admin.immunecircle.in/api/resource/Issue?fields=["name"]&filters=[["Issue","sales_invoice","=","'+sales_invoice+'"]]'
         res22 = requests.get(url=API_URL2)
         response = json.loads(res22.text)
         if len(response['data'])>0:
             return Response({"status":0,"message":"Issue already Exist"})
         data = json.dumps(data)
         # data = json.dumps(data)
-        API_URL = "http://14.98.78.69:2233/api/resource/Issue/"
+        API_URL = "https://admin.immunecircle.in/api/resource/Issue/"
         # data = {'data': {"subject":subject,"customer":customer,"sales_invoice":sales_invoice,"description":description,"issue_type":issue_type} }
         # data = json.dumps(data)
         res2 = requests.post(url=API_URL, verify=False, data =data)
@@ -3233,7 +3240,7 @@ class InsertIssue(APIView):
         # customer = get_customer_name( request.GET.get('email'))
         # print(data)
         # data = json.dumps(data)
-        # API_URL = 'http://14.98.78.69:2233/api/resource/Issue'
+        # API_URL = 'https://admin.immunecircle.in/api/resource/Issue'
         # res2 = requests.post(url=API_URL, verify=False, data =data)
         # print(res2.text)
         # return Response({"lead":res2.text})
@@ -3241,7 +3248,7 @@ class InsertIssue(APIView):
 
 class Get_Cateogary(APIView):
     def get(self,request,format=None):
-        API_URL = 'http://14.98.78.69:2233/api/resource/Benefits?fields=["*"]&filters=[["Benefits","item_code","=","'+request.GET.get('item_code')+'"],["Benefits","category","=","'+request.GET.get('category')+'"]]'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Benefits?fields=["*"]&filters=[["Benefits","item_code","=","'+request.GET.get('item_code')+'"],["Benefits","category","=","'+request.GET.get('category')+'"]]'
         res22 = requests.get(url=API_URL, verify=False)
         testimonial_res1 = json.loads(res22.text)
         return Response({"data":testimonial_res1})
@@ -3252,7 +3259,7 @@ class DeleteWishlist(APIView):
         list_of_brand = name.split(',')
         sid = get_sid()
         for l in list_of_brand:
-            API_URL = 'http://14.98.78.69:2233/api/resource/Wishlist/'+name+'?sid='+sid+''
+            API_URL = 'https://admin.immunecircle.in/api/resource/Wishlist/'+name+'?sid='+sid+''
             res2 = requests.get(url=API_URL, verify=False)
             response = json.loads(res2.text)
             if len(response['data']) >0:
@@ -3267,7 +3274,7 @@ class DeleteWishlist(APIView):
 
 def get_profile_pic(email):
     
-    API_URL = 'http://14.98.78.69:2233/api/resource/User?fields=["user_image"]&filters=[["User","email","=","'+email+'"]]'
+    API_URL = 'https://admin.immunecircle.in/api/resource/User?fields=["user_image"]&filters=[["User","email","=","'+email+'"]]'
     res22 = requests.get(url=API_URL, verify=False)
     testimonial_res1 = json.loads(res22.text)
     print(len(testimonial_res1['data']))
@@ -3284,33 +3291,33 @@ class DoctypeCRUD(APIView):
         sid = get_sid()
         if request.GET.get('docname'):
             docname = request.GET.get('docname')
-            API_URL = 'http://14.98.78.69:2233/api/resource/'+doctype+'/'+docname+'?sid='+sid+''
+            API_URL = 'https://admin.immunecircle.in/api/resource/'+doctype+'/'+docname+'?sid='+sid+''
             res22 = requests.get(url=API_URL, verify=False)
             testimonial_res1 = json.loads(res22.text)
             res = testimonial_res1['data']
             return Response({"data":res})
         else:
-            API_URL167 = 'http://14.98.78.69:2233/api/resource/'+doctype+'?fields=["name"]&limit_page_length=all'
+            API_URL167 = 'https://admin.immunecircle.in/api/resource/'+doctype+'?fields=["name"]&limit_page_length=all'
             res167 = requests.get(url=API_URL167, verify=False)
             testimonial_res1167 = json.loads(res167.text)
             post_length = len(testimonial_res1167['data'])
             start_page_length = request.GET.get('start_page_length')
             page_limit_length = request.GET.get('limit_page_length')
             testimonial_res1 = []
-            API_URL1 = 'http://14.98.78.69:2233/api/resource/'+doctype+'?fields=["*"]&limit_page_length='+page_limit_length+''
+            API_URL1 = 'https://admin.immunecircle.in/api/resource/'+doctype+'?fields=["*"]&limit_page_length='+page_limit_length+''
             res1 = requests.get(url=API_URL1, verify=False)
             testimonial_res11 = json.loads(res1.text)
             for response in testimonial_res11['data']:
                 len1 = 0
                 len2=0
                 if doctype =='Posts Manager':
-                    API_URL1 = 'http://14.98.78.69:2233/api/resource/Posts Likes?fields=["person_name"]&filters=[["Posts Likes","post_id","=","'+response['name']+'"]]'
+                    API_URL1 = 'https://admin.immunecircle.in/api/resource/Posts Likes?fields=["person_name"]&filters=[["Posts Likes","post_id","=","'+response['name']+'"]]'
                     res2 = requests.get(url=API_URL1, verify=False)
                     testimonial_res13 = json.loads(res2.text)
                     len1 = len(testimonial_res13['data'])
                 
                 if doctype =='Posts Manager':
-                    API_URL1tt = 'http://14.98.78.69:2233/api/resource/Comments?fields=["posts_manager"]&filters=[["Comments","posts_manager","=","'+response['name']+'"]]'
+                    API_URL1tt = 'https://admin.immunecircle.in/api/resource/Comments?fields=["posts_manager"]&filters=[["Comments","posts_manager","=","'+response['name']+'"]]'
                     res222 = requests.get(url=API_URL1tt, verify=False)
                     testimonial_res131 = json.loads(res222.text)
                     len2 = len(testimonial_res131['data'])
@@ -3318,14 +3325,14 @@ class DoctypeCRUD(APIView):
                 
                 
                 
-                API_URL = 'http://14.98.78.69:2233/api/resource/Media Table?fields=["media_data"]&filters=[["Media Table","post_id","=","'+response['name']+'"]]'
+                API_URL = 'https://admin.immunecircle.in/api/resource/Media Table?fields=["media_data"]&filters=[["Media Table","post_id","=","'+response['name']+'"]]'
 
                 res22 = requests.get(url=API_URL, verify=False)
                 testimonial_res13 = json.loads(res22.text)
                 user_image = get_profile_pic(response['owner'])
                 image = testimonial_res13['data']
 
-                API_URL_SHARED = 'http://14.98.78.69:2233/api/resource/Shared Users?fields=["*"]&filters=[["Shared Users","post_id","=","'+response['name']+'"]]'
+                API_URL_SHARED = 'https://admin.immunecircle.in/api/resource/Shared Users?fields=["*"]&filters=[["Shared Users","post_id","=","'+response['name']+'"]]'
 
                 resshared = requests.get(url=API_URL_SHARED, verify=False)
                 testimonial_res13shared = json.loads(resshared.text)
@@ -3362,7 +3369,7 @@ class DoctypeCRUD(APIView):
             pass
         
         data = json.dumps(data)
-        API_URL = 'http://14.98.78.69:2233/api/resource/'+module+''
+        API_URL = 'https://admin.immunecircle.in/api/resource/'+module+''
         res2 = requests.post(url=API_URL, verify=False, data =data)
         response_data = json.loads(res2.text)
         
@@ -3377,7 +3384,7 @@ class DoctypeCRUD(APIView):
                     
                     z.update({'post_id':name,'customer_name':person_name})
                     z = json.dumps(z)
-                    API_URL2 = 'http://14.98.78.69:2233/api/resource/Media Table'
+                    API_URL2 = 'https://admin.immunecircle.in/api/resource/Media Table'
                     res22 = requests.post(url=API_URL2, verify=False, data = z)
                     #response_data2 = json.loads(res22.text)
 
@@ -3393,7 +3400,7 @@ class DoctypeCRUD(APIView):
                     customer_name = get_customer_name(y['email'])
                     y.update({'post_id':name,'customer_name':customer_name})
                     y = json.dumps(y)
-                    API_URL_SHARED = 'http://14.98.78.69:2233/api/resource/Shared Users'
+                    API_URL_SHARED = 'https://admin.immunecircle.in/api/resource/Shared Users'
                     resshared = requests.post(url=API_URL_SHARED, verify=False, data = y)
         except:
             pass
@@ -3405,7 +3412,7 @@ class DoctypeCRUD(APIView):
         data = request.data
         module = request.data['module']
         data = json.dumps(data)
-        API_URL = 'http://14.98.78.69:2233/api/resource/'+module+''
+        API_URL = 'https://admin.immunecircle.in/api/resource/'+module+''
         res2 = requests.put(url=API_URL, verify=False, data =data)
         print(res2.text)
         return Response({"data":res2.text})
@@ -3416,7 +3423,7 @@ class CommentSection(APIView):
         start_page_length = request.GET.get('start_page_length')
         page_limit_length = request.GET.get('limit_page_length')
         l=[]
-        API_URL1 = 'http://14.98.78.69:2233/api/resource/Comments?fields=["*"]&filters=[["Comments","posts_manager","=","'+post_id+'"]]&limit_page_length='+page_limit_length+''
+        API_URL1 = 'https://admin.immunecircle.in/api/resource/Comments?fields=["*"]&filters=[["Comments","posts_manager","=","'+post_id+'"]]&limit_page_length='+page_limit_length+''
         res2 = requests.get(url=API_URL1, verify=False)
         testimonial_res11 = json.loads(res2.text)
         resp = testimonial_res11['data']
@@ -3424,7 +3431,7 @@ class CommentSection(APIView):
             print("--------------------------------")
             profile_image = get_profile_pic(r['owner'])
             customer_name = get_customer_name(r['owner'])
-            API_REPLY = 'http://14.98.78.69:2233/api/resource/Reply Table?fields=["*"]&filters=[["Reply Table","parent1","=","'+r['name']+'"]]&limit_page_length=all'
+            API_REPLY = 'https://admin.immunecircle.in/api/resource/Reply Table?fields=["*"]&filters=[["Reply Table","parent1","=","'+r['name']+'"]]&limit_page_length=all'
             resreply = requests.get(url=API_REPLY, verify=False)
             replyjson = json.loads(resreply.text)
             replycount = len(replyjson['data'])
@@ -3432,7 +3439,7 @@ class CommentSection(APIView):
             l.append(r)
 
         
-        API_URL = 'http://14.98.78.69:2233/api/resource/Comments?fields=["*"]&filters=[["Comments","posts_manager","=","'+post_id+'"]]&limit_page_length=all'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Comments?fields=["*"]&filters=[["Comments","posts_manager","=","'+post_id+'"]]&limit_page_length=all'
         res2 = requests.get(url=API_URL, verify=False)
         testimonial_res11 = json.loads(res2.text)
         resp = testimonial_res11['data']
@@ -3444,7 +3451,7 @@ class CommentSection(APIView):
         data = request.data
         data = json.dumps(data)
         
-        API_URL = 'http://14.98.78.69:2233/api/resource/Comments'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Comments'
         res2 = requests.post(url=API_URL, verify=False, data =data)
         response_data = json.loads(res2.text)
         resp_ = response_data['data']
@@ -3469,7 +3476,7 @@ class CommentSection(APIView):
         if int(check_)==1:
 
             #dislike_ = request.data['dislike_increment']
-            Api_url = 'http://14.98.78.69:2233/api/resource/Comments?fields=["likes"]&filters=[["Comments","name","=","'+name+'"]]'
+            Api_url = 'https://admin.immunecircle.in/api/resource/Comments?fields=["likes"]&filters=[["Comments","name","=","'+name+'"]]'
             ress = requests.get(Api_url)
             json_data = json.loads(ress.text)
             if int(like_)==1:
@@ -3498,7 +3505,7 @@ class CommentSection(APIView):
             
             sid = get_sid()
             data = json.dumps(data)
-            API_URL = 'http://14.98.78.69:2233/api/resource/Comments/'+name+'?sid='+sid+''
+            API_URL = 'https://admin.immunecircle.in/api/resource/Comments/'+name+'?sid='+sid+''
             res2 = requests.put(url=API_URL, verify=False, data =data)
             response_data = json.loads(res2.text)
             resp_ = response_data['data']
@@ -3520,7 +3527,7 @@ class UsedCoupon(APIView):
         coupon_code = request.GET.get('coupon_code')
         email = request.GET.get('email')
         customer_name = get_customer_name(email)
-        customer_url =  'http://14.98.78.69:2233/api/resource/Coupon Code By Users?fields=["*"]&filters=[["Coupon Code By Users", "coupon_code", "=", "'+coupon_code+'"],["Coupon Code By Users", "customer", "=", "'+customer_name+'"]]&limit_page_length=all'
+        customer_url =  'https://admin.immunecircle.in/api/resource/Coupon Code By Users?fields=["*"]&filters=[["Coupon Code By Users", "coupon_code", "=", "'+coupon_code+'"],["Coupon Code By Users", "customer", "=", "'+customer_name+'"]]&limit_page_length=all'
         res2 = requests.get(url=customer_url)
         print(res2.text)
         return Response(json.loads(res2.text))
@@ -3529,7 +3536,7 @@ class UsedCoupon(APIView):
     def post(self, request, format=None):
         data = request.data
         data = json.dumps(data)
-        API_URL = 'http://14.98.78.69:2233/api/resource/Coupon Code By Users'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Coupon Code By Users'
         res2 = requests.post(url=API_URL, verify=False, data =data)
         response_data = json.loads(res2.text)
         return Response({"data":response_data['data']})
@@ -3538,7 +3545,7 @@ class CheckPincode(APIView):
     def get(self,request,format=None):
         pincode = request.GET.get('pincode')
         status = {'status':0}
-        API_URL =  'http://14.98.78.69:2233/api/resource/Pincode?fields=["name"]&filters=[["Pincode","pincode","=","'+pincode+'"]]'
+        API_URL =  'https://admin.immunecircle.in/api/resource/Pincode?fields=["name"]&filters=[["Pincode","pincode","=","'+pincode+'"]]'
         res = requests.get(url=API_URL, verify=False)
         json_data = json.loads(res.text)
         if len(json_data['data']) > 0:
@@ -3553,7 +3560,7 @@ class ReplySection(APIView):
         sid = get_sid()
         start_page_length = request.GET.get('start_page_length')
         page_limit_length = request.GET.get('limit_page_length')
-        API_URL = 'http://14.98.78.69:2233/api/resource/Reply Table?fields=["*"]&filters=[["Reply Table","parent1","=","'+post_id+'"],["Reply Table","child","=",""]]&limit_page_length='+page_limit_length+''
+        API_URL = 'https://admin.immunecircle.in/api/resource/Reply Table?fields=["*"]&filters=[["Reply Table","parent1","=","'+post_id+'"],["Reply Table","child","=",""]]&limit_page_length='+page_limit_length+''
         res22 = requests.get(url=API_URL, verify=False)
         testimonial_res1 = json.loads(res22.text)
         res = testimonial_res1['data']
@@ -3566,7 +3573,7 @@ class ReplySection(APIView):
                 r.update({"profile_pic":profile_image,"customer_name":customer_name})
                 
                 l.append(r)
-        API_URL1 = 'http://14.98.78.69:2233/api/resource/Reply Table?fields=["*"]&filters=[["Reply Table","parent1","=","'+post_id+'"],["Reply Table","child","=",""]]&limit_page_length=all'
+        API_URL1 = 'https://admin.immunecircle.in/api/resource/Reply Table?fields=["*"]&filters=[["Reply Table","parent1","=","'+post_id+'"],["Reply Table","child","=",""]]&limit_page_length=all'
         res2 = requests.get(url=API_URL1, verify=False)
         testimonial_res11 = json.loads(res2.text)
         resp = testimonial_res11['data']
@@ -3578,7 +3585,7 @@ class ReplySection(APIView):
     def post(self, request, format=None):
         data = request.data
         data = json.dumps(data)
-        API_URL = 'http://14.98.78.69:2233/api/resource/Reply Table'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Reply Table'
         res2 = requests.post(url=API_URL, verify=False, data =data)
         response_data = json.loads(res2.text)
         
@@ -3619,7 +3626,7 @@ class ReplySection(APIView):
         sid = get_sid()
         data = json.dumps(data)
         
-        API_URL = 'http://14.98.78.69:2233/api/resource/Reply Table/'+name+'?sid='+sid+''
+        API_URL = 'https://admin.immunecircle.in/api/resource/Reply Table/'+name+'?sid='+sid+''
         res2 = requests.put(url=API_URL, verify=False, data =data)
         response_data = json.loads(res2.text)
         resp_ = response_data['data']
@@ -3632,7 +3639,7 @@ class Like_Getter(APIView):
     def get(self, request, format=None):
         post_id = request.GET.get('post_id')
         customer_name_list = []
-        API_URL = 'http://14.98.78.69:2233/api/resource/Posts Likes?fields=["person_name"]&filters=[["Posts Likes","post_id","=","'+post_id+'"]]'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Posts Likes?fields=["person_name"]&filters=[["Posts Likes","post_id","=","'+post_id+'"]]'
         res = requests.get(url=API_URL, verify=False)
         testimonial_res1 = json.loads(res.text)
         resp = testimonial_res1['data']
@@ -3655,13 +3662,13 @@ class Like_Getter(APIView):
         data = request.data
         user_email = request.data['person_name']
         post_id = request.data['post_id']
-        API_URL1 =  'http://14.98.78.69:2233/api/resource/Posts Likes?fields=["name"]&filters=[["Posts Likes","post_id","=","'+post_id+'"],["Posts Likes","person_name","=","'+user_email+'"]]'
+        API_URL1 =  'https://admin.immunecircle.in/api/resource/Posts Likes?fields=["name"]&filters=[["Posts Likes","post_id","=","'+post_id+'"],["Posts Likes","person_name","=","'+user_email+'"]]'
         res = requests.get(url=API_URL1, verify=False)
         testimonial_res1 = json.loads(res.text)
         if len(testimonial_res1['data'])<=0:
             
             data = json.dumps(data)
-            API_URL = 'http://14.98.78.69:2233/api/resource/Posts Likes'
+            API_URL = 'https://admin.immunecircle.in/api/resource/Posts Likes'
             res2 = requests.post(url=API_URL, verify=False, data =data)
             response_data = json.loads(res2.text)
             return Response(response_data)
@@ -3672,14 +3679,14 @@ class Like_Getter(APIView):
         user_email = request.data['person_name']
 
         post_id = request.data['post_id']
-        API_URL = 'http://14.98.78.69:2233/api/resource/Posts Likes?fields=["name"]&filters=[["Posts Likes","post_id","=","'+post_id+'"],["Posts Likes","person_name","=","'+user_email+'"]]'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Posts Likes?fields=["name"]&filters=[["Posts Likes","post_id","=","'+post_id+'"],["Posts Likes","person_name","=","'+user_email+'"]]'
         res = requests.get(url=API_URL, verify=False)
         print(res.text)
 
         testimonial_res1 = json.loads(res.text)
         name = testimonial_res1['data'][0]['name']
         sid = get_sid()
-        API_URL1 = 'http://14.98.78.69:2233/api/resource/Posts Likes/'+name+'?sid='+sid+''
+        API_URL1 = 'https://admin.immunecircle.in/api/resource/Posts Likes/'+name+'?sid='+sid+''
         res2 = requests.delete(API_URL1)
         return Response(json.loads(res2.text))
 
@@ -3689,7 +3696,7 @@ class Like_Getter(APIView):
 def check_like_getter(user_email,post_id,like):
     
     if int(like) == 1:
-        API_URL1 =  'http://14.98.78.69:2233/api/resource/Posts Likes?fields=["name"]&filters=[["Posts Likes","post_id","=","'+post_id+'"],["Posts Likes","person_name","=","'+user_email+'"]]'
+        API_URL1 =  'https://admin.immunecircle.in/api/resource/Posts Likes?fields=["name"]&filters=[["Posts Likes","post_id","=","'+post_id+'"],["Posts Likes","person_name","=","'+user_email+'"]]'
         res = requests.get(url=API_URL1, verify=False)
         testimonial_res1 = json.loads(res.text)
         print(testimonial_res1)
@@ -3697,7 +3704,7 @@ def check_like_getter(user_email,post_id,like):
             
             data = {'person_name':user_email,'post_id':post_id}
             data = json.dumps(data)
-            API_URL = 'http://14.98.78.69:2233/api/resource/Posts Likes'
+            API_URL = 'https://admin.immunecircle.in/api/resource/Posts Likes'
             res2 = requests.post(url=API_URL, verify=False, data =data)
             response_data = json.loads(res2.text)
             return 1
@@ -3710,12 +3717,12 @@ def check_like_getter(user_email,post_id,like):
 
 def delete_unlike(post_id,user_email):
 
-    API_URL = 'http://14.98.78.69:2233/api/resource/Posts Likes?fields=["name"]&filters=[["Posts Likes","post_id","=","'+post_id+'"],["Posts Likes","person_name","=","'+user_email+'"]]'
+    API_URL = 'https://admin.immunecircle.in/api/resource/Posts Likes?fields=["name"]&filters=[["Posts Likes","post_id","=","'+post_id+'"],["Posts Likes","person_name","=","'+user_email+'"]]'
     res = requests.get(url=API_URL, verify=False)
     testimonial_res1 = json.loads(res.text)
     name = testimonial_res1['data'][0]['name']
     sid = get_sid()
-    API_URL1 = 'http://14.98.78.69:2233/api/resource/Posts Likes/'+name+'?sid='+sid+''
+    API_URL1 = 'https://admin.immunecircle.in/api/resource/Posts Likes/'+name+'?sid='+sid+''
     res2 = requests.delete(API_URL1)
     print(res2.text)
 
@@ -3723,7 +3730,7 @@ class User_Like_Getter(APIView):
     def get(self, request, format=None):
         email = request.GET.get('email')
         post_list = []
-        API_URL = 'http://14.98.78.69:2233/api/resource/Posts Likes?fields=["post_id"]&filters=[["Posts Likes","person_name","=","'+email+'"]]'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Posts Likes?fields=["post_id"]&filters=[["Posts Likes","person_name","=","'+email+'"]]'
         res = requests.get(url=API_URL, verify=False)
         testimonial_res1 = json.loads(res.text)
         resp = testimonial_res1['data']
@@ -3739,32 +3746,32 @@ class Get_User_Uploaded_Images(APIView):
         start_page_length = request.GET.get('start_page_length')
         page_limit_length = request.GET.get('limit_page_length')
         customer_name = get_customer_name( request.GET.get('email'))
-        API_URL_IMAGE = 'http://14.98.78.69:2233/api/resource/Media Table?fields=["media_data"]&filters=[["Media Table","customer_name","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
+        API_URL_IMAGE = 'https://admin.immunecircle.in/api/resource/Media Table?fields=["media_data"]&filters=[["Media Table","customer_name","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
         res = requests.get(url=API_URL_IMAGE, verify=False)
         json_data = json.loads(res.text)
         for r in json_data['data']:
             images_list.append(r['media_data'])
-        API_URL_IMAGE_LENGTH = 'http://14.98.78.69:2233/api/resource/Media Table?fields=["media_data"]&filters=[["Media Table","customer_name","=","'+customer_name+'"]]&limit_page_length=all'
+        API_URL_IMAGE_LENGTH = 'https://admin.immunecircle.in/api/resource/Media Table?fields=["media_data"]&filters=[["Media Table","customer_name","=","'+customer_name+'"]]&limit_page_length=all'
         res_length = requests.get(url=API_URL_IMAGE_LENGTH, verify=False)
         json_data_length = json.loads(res_length.text)
         images_list1 = len(json_data_length['data'])
-        # API_URL = 'http://14.98.78.69:2233/api/resource/Posts Manager?fields=["name"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
+        # API_URL = 'https://admin.immunecircle.in/api/resource/Posts Manager?fields=["name"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
         # res = requests.get(url=API_URL, verify=False)
         # json_data = json.loads(res.text)
         # for r in json_data['data']:
-        #     API_URL1 = 'http://14.98.78.69:2233/api/resource/Posts Manager/'+r['name']+'?sid='+sid+''
+        #     API_URL1 = 'https://admin.immunecircle.in/api/resource/Posts Manager/'+r['name']+'?sid='+sid+''
         #     res1 = requests.get(url=API_URL1, verify=False)
         #     json_data1 = json.loads(res1.text)
         #     if len(json_data1['data']['post_media'])>0:
         #         images_list.append(json_data1['data']['post_media'])
         
         
-        # API_URL11 = 'http://14.98.78.69:2233/api/resource/Posts Manager?fields=["name"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length=all'
+        # API_URL11 = 'https://admin.immunecircle.in/api/resource/Posts Manager?fields=["name"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length=all'
         # res11 = requests.get(url=API_URL11, verify=False)
         # json_data11 = json.loads(res11.text)
         # for r11 in json_data11['data']:
             
-        #     API_URL111 = 'http://14.98.78.69:2233/api/resource/Posts Manager/'+r11['name']+'?sid='+sid+''
+        #     API_URL111 = 'https://admin.immunecircle.in/api/resource/Posts Manager/'+r11['name']+'?sid='+sid+''
         #     res111 = requests.get(url=API_URL111, verify=False)
         #     json_data111 = json.loads(res111.text)
         #     if len(json_data111['data']['post_media'])>0:
@@ -3785,10 +3792,10 @@ class Follower_Module(APIView):
         start_page_length = request.GET.get('start_page_length')
         page_limit_length = request.GET.get('limit_page_length')
         if type == "Follower":
-            API_URL = 'http://14.98.78.69:2233/api/resource/Followers?fields=["*"]&filters=[["Followers","email","=","'+email+'"]]&limit_page_length='+page_limit_length+''
+            API_URL = 'https://admin.immunecircle.in/api/resource/Followers?fields=["*"]&filters=[["Followers","email","=","'+email+'"]]&limit_page_length='+page_limit_length+''
         elif type == "Following":
             customer_name = get_customer_name(email)
-            API_URL = 'http://14.98.78.69:2233/api/resource/Followers?fields=["*"]&filters=[["Followers","customer_name","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
+            API_URL = 'https://admin.immunecircle.in/api/resource/Followers?fields=["*"]&filters=[["Followers","customer_name","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
         res = requests.get(url=API_URL, verify=False)
         json_data = json.loads(res.text)
 
@@ -3820,13 +3827,13 @@ class Follower_Module(APIView):
         user_email = request.data['email']
         type = request.data['type']
         customer_name = request.data['customer_name']
-        API_URL = 'http://14.98.78.69:2233/api/resource/Followers?fields=["name"]&filters=[["Followers","email","=","'+user_email+'"],["Followers","customer_name","=","'+customer_name+'"]]'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Followers?fields=["name"]&filters=[["Followers","email","=","'+user_email+'"],["Followers","customer_name","=","'+customer_name+'"]]'
         res = requests.get(url=API_URL, verify=False)
         json_data = json.loads(res.text)
         if json_data['data']:
             return Response({"status":"already following"})
         data = json.dumps(data)
-        API_URL = 'http://14.98.78.69:2233/api/resource/Followers'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Followers'
         res2 = requests.post(url=API_URL, verify=False, data =data)
         response_data = json.loads(res2.text)
         print(response_data)
@@ -3837,12 +3844,12 @@ class Follower_Module(APIView):
         user_email = request.data['email']
         type = request.data['type']
         customer_name = request.data['customer_name']
-        API_URL = 'http://14.98.78.69:2233/api/resource/Followers?fields=["name"]&filters=[["Followers","email","=","'+user_email+'"],["Followers","customer_name","=","'+customer_name+'"]]'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Followers?fields=["name"]&filters=[["Followers","email","=","'+user_email+'"],["Followers","customer_name","=","'+customer_name+'"]]'
         res = requests.get(url=API_URL, verify=False)
         testimonial_res1 = json.loads(res.text)
         name = testimonial_res1['data'][0]['name']
         sid = get_sid()
-        API_URL1 = 'http://14.98.78.69:2233/api/resource/Followers/'+name+'?sid='+sid+''
+        API_URL1 = 'https://admin.immunecircle.in/api/resource/Followers/'+name+'?sid='+sid+''
         res2 = requests.delete(API_URL1)
         return Response(json.loads(res2.text))
 
@@ -3853,11 +3860,11 @@ class Following_list(APIView):
         type = request.GET.get('type')
         list_ = []
         if type == "Follower":
-            API_URL = 'http://14.98.78.69:2233/api/resource/Followers?fields=["customer_name"]&filters=[["Followers","email","=","'+email+'"]]&limit_page_length=all'
+            API_URL = 'https://admin.immunecircle.in/api/resource/Followers?fields=["customer_name"]&filters=[["Followers","email","=","'+email+'"]]&limit_page_length=all'
         elif type == "Following":
             customer_name = get_customer_name(email)
 
-            API_URL = 'http://14.98.78.69:2233/api/resource/Followers?fields=["email"]&filters=[["Followers","customer_name","=","'+customer_name+'"]]&limit_page_length=all'
+            API_URL = 'https://admin.immunecircle.in/api/resource/Followers?fields=["email"]&filters=[["Followers","customer_name","=","'+customer_name+'"]]&limit_page_length=all'
             
 
         res = requests.get(url=API_URL, verify=False)
@@ -3878,7 +3885,7 @@ class Search_User(APIView):
         list_ = []
         if len(customer_name) <3:
             return Response({"error":"length should be greater than 2"})
-        API_URL = 'http://14.98.78.69:2233/api/resource/Customer?fields=["name","customer_name","email_id"]&filters=[["Customer","name","LIKE","%'+customer_name+'%"]]'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Customer?fields=["name","customer_name","email_id"]&filters=[["Customer","name","LIKE","%'+customer_name+'%"]]'
         res = requests.get(url=API_URL, verify=False)
         json_data = json.loads(res.text)
         for r in json_data['data']:
@@ -3892,7 +3899,7 @@ class GetFollowList(APIView):
     def get(self,request,format=None):
         email = request.GET.get('email')
         list_ = []
-        API_URL = 'http://14.98.78.69:2233/api/resource/Followers?fields=["customer_name"]&filters=[["Followers","email","=","'+email+'"]]&limit_page_length=all'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Followers?fields=["customer_name"]&filters=[["Followers","email","=","'+email+'"]]&limit_page_length=all'
         res = requests.get(url=API_URL, verify=False)
         json_data = json.loads(res.text)
         for r in json_data['data']:
@@ -3902,7 +3909,7 @@ class GetFollowList(APIView):
 
 
 def get_customer_email(email):
-    customer_name = 'http://14.98.78.69:2233/api/resource/Customer?fields=["email_id"]&filters=[["Customer", "name", "=", "'+email+'"]]&limit_page_length=all'
+    customer_name = 'https://admin.immunecircle.in/api/resource/Customer?fields=["email_id"]&filters=[["Customer", "name", "=", "'+email+'"]]&limit_page_length=all'
     res = requests.get(url = customer_name,verify=False)
     data_cust = json.loads(res.text)
     return data_cust['data'][0]['email_id']
@@ -3913,7 +3920,7 @@ class At_TheRate(APIView):
         q = request.GET.get('q')
         list_ = []
         
-        API_URL = API_URL = 'http://14.98.78.69:2233/api/resource/Followers?fields=["customer_name","email"]&filters=[["Followers","email","=","'+email+'"],["Followers","customer_name","LIKE","%'+q+'%"]]&limit_page_length=all'
+        API_URL = API_URL = 'https://admin.immunecircle.in/api/resource/Followers?fields=["customer_name","email"]&filters=[["Followers","email","=","'+email+'"],["Followers","customer_name","LIKE","%'+q+'%"]]&limit_page_length=all'
         res = requests.get(url=API_URL, verify=False)
         json_data = json.loads(res.text)
         for r in json_data['data']:
@@ -3932,23 +3939,23 @@ class User_POST(APIView):
         start_page_length = request.GET.get('start_page_length')
         page_limit_length = request.GET.get('limit_page_length')
         customer_name = get_customer_name(email)
-        API_URL_LENGTH = 'http://14.98.78.69:2233/api/resource/Posts Manager?fields=["name"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length=all'
+        API_URL_LENGTH = 'https://admin.immunecircle.in/api/resource/Posts Manager?fields=["name"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length=all'
         res_LENGTH = requests.get(url=API_URL_LENGTH, verify=False)
         json_data_LENGTH = json.loads(res_LENGTH.text)
         total_length = len(json_data_LENGTH['data'])
-        API_URL = 'http://14.98.78.69:2233/api/resource/Posts Manager?fields=["*"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
+        API_URL = 'https://admin.immunecircle.in/api/resource/Posts Manager?fields=["*"]&filters=[["Posts Manager","person_name","=","'+customer_name+'"]]&limit_page_length='+page_limit_length+''
         res = requests.get(url=API_URL, verify=False)
         json_data = json.loads(res.text)
         
         for r in json_data['data']:
-            API_URL_MEDIA = 'http://14.98.78.69:2233/api/resource/Media Table?fields=["media_data"]&filters=[["Media Table","post_id","=","'+r['name']+'"]]'
+            API_URL_MEDIA = 'https://admin.immunecircle.in/api/resource/Media Table?fields=["media_data"]&filters=[["Media Table","post_id","=","'+r['name']+'"]]'
 
             res22 = requests.get(url=API_URL_MEDIA, verify=False)
             testimonial_res13 = json.loads(res22.text)
             user_image = get_profile_pic(r['owner'])
             image = testimonial_res13['data']
 
-            API_URL_SHARED = 'http://14.98.78.69:2233/api/resource/Shared Users?fields=["*"]&filters=[["Shared Users","post_id","=","'+r['name']+'"]]'
+            API_URL_SHARED = 'https://admin.immunecircle.in/api/resource/Shared Users?fields=["*"]&filters=[["Shared Users","post_id","=","'+r['name']+'"]]'
 
             resshared = requests.get(url=API_URL_SHARED, verify=False)
             testimonial_res13shared = json.loads(resshared.text)
@@ -3964,12 +3971,12 @@ class Coupon_List(APIView):
         sid = get_sid()
         coupon_list = []
         customer_name = get_customer_name(email)
-        API_URL = 'http://14.98.78.69:2233/api/resource/Coupon Code?fields=["name"]&filters=[["Coupon Code","customer","=","'+customer_name+'"]]'
+        API_URL = 'https://admin.immunecircle.in/api/resource/Coupon Code?fields=["name"]&filters=[["Coupon Code","customer","=","'+customer_name+'"]]'
         res = requests.get(url=API_URL, verify=False)
         json_data = json.loads(res.text)
         
         for r in json_data['data']:
-            API_URL1 = 'http://14.98.78.69:2233/api/resource/Coupon Code/'+r['name']+'?sid='+sid+''
+            API_URL1 = 'https://admin.immunecircle.in/api/resource/Coupon Code/'+r['name']+'?sid='+sid+''
             res2 = requests.get(url=API_URL1, verify=False)
             json_data1 = json.loads(res2.text)
             coupon_list.append(json_data1['data'])
@@ -3991,10 +3998,10 @@ class Follow_Count(APIView):
         email = request.GET.get('email')
         type = request.GET.get('type')
         if type == "Follower":
-            API_URL = 'http://14.98.78.69:2233/api/resource/Followers?fields=["name"]&filters=[["Followers","email","=","'+email+'"]]&limit_page_length=all'
+            API_URL = 'https://admin.immunecircle.in/api/resource/Followers?fields=["name"]&filters=[["Followers","email","=","'+email+'"]]&limit_page_length=all'
         elif type == "Following":
             customer_name = get_customer_name(email)
-            API_URL = 'http://14.98.78.69:2233/api/resource/Followers?fields=["name"]&filters=[["Followers","customer_name","=","'+customer_name+'"]]&limit_page_length=all'
+            API_URL = 'https://admin.immunecircle.in/api/resource/Followers?fields=["name"]&filters=[["Followers","customer_name","=","'+customer_name+'"]]&limit_page_length=all'
         res = requests.get(url=API_URL, verify=False)
         json_data = json.loads(res.text)
         return Response({"count":len(json_data['data'])})
@@ -4010,7 +4017,7 @@ def similar_category_items(request):
     item_group = request.GET.get('item_group')
     list_item=[]
     fields='["Item","disabled","=","0"],["Item","has_variants","=","0"],["Item","main_category","=","'+main_category+'"],["Item","sub_category","=","'+sub_category+'"],["Item","item_group","=","'+item_group+'"]'
-    item_detail_api = 'http://14.98.78.69:2233/api/resource/Item?fields=["*"]&filters=['+fields+']&limit_page_length=10'
+    item_detail_api = 'https://admin.immunecircle.in/api/resource/Item?fields=["*"]&filters=['+fields+']&limit_page_length=10'
     res = requests.get(url = item_detail_api,verify=False)
     print(res.text)
     response_data = json.loads(res.text)
