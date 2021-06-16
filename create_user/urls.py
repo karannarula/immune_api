@@ -38,18 +38,19 @@ urlpatterns = [
     path('like_getter/',views.Like_Getter.as_view()),
     path('user_like_getter/',views.User_Like_Getter.as_view()),
     path('get_user_uploaded_image/',views.Get_User_Uploaded_Images.as_view()),
-    path('get_follow_list/',views.Following_list.as_view()),
+    # path('get_follow_list/',views.Following_list.as_view()),
     path('search_user/',views.Search_User.as_view()),
-    path('get_follow_list_all/',views.GetFollowList.as_view()),
+    # path('get_follow_list_all/',views.GetFollowList.as_view()),
     path('search_tag/',views.At_TheRate.as_view()),
     path('user_post/',views.User_POST.as_view()),
+    path('delete_post/',views.delete_post),
     path('coupon_list/',views.Coupon_List.as_view()),
     path('CouponCode/',views.CouponCode.as_view()),
     path('youtubevid/',views.YouTubeVid.as_view()),
-    path('follow_count/',views.Follow_Count.as_view()),
+    # path('follow_count/',views.Follow_Count.as_view()),
     path('forgotPassword/',views.ForgotPassword.as_view()),
     path('insert_supplier/',views.SupplierInsert.as_view()),
-    path('follower/',views.Follower_Module.as_view()),
+    # path('follower/',views.Follower_Module.as_view()),
     
     path('delete_wishlist/',views.DeleteWishlist.as_view()),
     path('check_pincode/',views.CheckPincode.as_view()),
@@ -117,7 +118,9 @@ urlpatterns = [
     path('insert_sales_invoice/',views.Sales_Invoice.as_view()),
     path('get_lead_emm/',views.Get_Lead_Emm.as_view()),
     path('get_address_detail/',views.Get_Address_details.as_view()),
-    path('similar_category_items/',views.similar_category_items)
+    path('similar_category_items/',views.similar_category_items),
+    path("follow/",views.Follow.as_view())
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
